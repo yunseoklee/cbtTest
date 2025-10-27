@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISTQB CTFL 모의고사 CBT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #f8f9fa;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: white;
+            color: #5e72e4;
+            border-bottom: 3px solid #5e72e4;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .content {
+            padding: 30px;
+            min-height: 500px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 용어 학습 스타일 */
+        .term-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .term-title {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .term-definition {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #34495e;
+            margin-bottom: 15px;
+        }
+
+        .term-importance {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .term-category {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #3498db;
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        /* 모의고사 스타일 */
+        .quiz-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+        }
+
+        .question {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: #5e72e4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .options {
+            margin-bottom: 20px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: #5e72e4;
+            background: #f8f9ff;
+        }
+
+        .option.selected {
+            border-color: #5e72e4;
+            background: #e8ebff;
+        }
+
+        .option.correct {
+            border-color: #27ae60;
+            background: #d4edda;
+        }
+
+        .option.incorrect {
+            border-color: #e74c3c;
+            background: #f8d7da;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 15px;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(94, 114, 228, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .score-display h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        /* 학습 진도 */
+        .progress-bar {
+            background: #dee2e6;
+            height: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #5e72e4, #825ee4);
+            height: 100%;
+            transition: width 0.5s;
+        }
+
+        .filter-buttons {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border: 2px solid #dee2e6;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #5e72e4;
+            color: white;
+            border-color: #5e72e4;
+        }
+
+        .explanation {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .explanation h4 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 ISTQB CTFL 모의고사</h1>
+            <p>Certified Tester Foundation Level v4.0</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showSection('terms')">📚 핵심 용어</button>
+            <button class="tab" onclick="showSection('quiz')">📝 모의고사</button>
+            <button class="tab" onclick="showSection('flashcard')">🔄 플래시카드</button>
+        </div>
+
+        <div class="content">
+            <!-- 핵심 용어 섹션 -->
+            <div id="terms" class="section active">
+                <h2 style="margin-bottom: 20px;">핵심 용어 학습</h2>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterTerms('all')">전체</button>
+                    <button class="filter-btn" onclick="filterTerms('foundation')">테스팅 기초</button>
+                    <button class="filter-btn" onclick="filterTerms('lifecycle')">생명주기</button>
+                    <button class="filter-btn" onclick="filterTerms('static')">정적 테스팅</button>
+                    <button class="filter-btn" onclick="filterTerms('technique')">테스트 기법</button>
+                    <button class="filter-btn" onclick="filterTerms('management')">테스트 관리</button>
+                </div>
+
+                <div id="terms-container"></div>
+            </div>
+
+            <!-- 모의고사 섹션 -->
+            <div id="quiz" class="section">
+                <h2 style="margin-bottom: 20px;">CBT 모의고사</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quiz-progress" style="width: 0%;"></div>
+                </div>
+                <div id="quiz-container" class="quiz-container">
+                    <!-- 문제가 여기에 동적으로 로드됨 -->
+                </div>
+            </div>
+
+            <!-- 플래시카드 섹션 -->
+            <div id="flashcard" class="section">
+                <h2 style="margin-bottom: 20px;">플래시카드 학습</h2>
+                <div id="flashcard-container" style="text-align: center;">
+                    <div class="term-card" style="cursor: pointer; min-height: 300px; display: flex; flex-direction: column; justify-content: center;" onclick="flipCard()">
+                        <div id="card-front">
+                            <h3 id="flashcard-term" style="font-size: 28px; color: #2c3e50;"></h3>
+                            <p style="margin-top: 20px; color: #7f8c8d;">클릭하여 정의 보기</p>
+                        </div>
+                        <div id="card-back" style="display: none;">
+                            <p id="flashcard-definition" style="font-size: 18px; line-height: 1.8;"></p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="previousCard()">⬅ 이전</button>
+                        <span style="margin: 0 20px;" id="card-counter">1 / 10</span>
+                        <button class="btn btn-primary" onclick="nextCard()">다음 ➡</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 핵심 용어 데이터
+        const terms = [
+            {
+                term: "테스팅 (Testing)",
+                definition: "소프트웨어 제품과 관련 작업 산출물이 명시된 요구사항을 만족하는지 결정하고, 목적에 부합함을 입증하며, 결함을 발견하기 위한 활동",
+                importance: "필수암기",
+                category: "foundation",
+                details: "정적/동적 활동 모두 포함, 계획/분석/설계/구현/실행/완료 활동 포함"
+            },
+            {
+                term: "테스트 케이스 (Test Case)",
+                definition: "사전조건, 입력값, 행동(해야 할 일), 기대 결과, 사후조건의 집합으로 특정 테스트 목적이나 테스트 조건을 위해 개발됨",
+                importance: "필수암기",
+                category: "foundation"
+            },
+            {
+                term: "결함 (Defect/Bug/Fault)",
+                definition: "작업 산출물의 불완전함이나 결점으로 인해 작업 산출물이 요구사항이나 명세를 충족시키지 못하는 것",
+                importance: "필수암기",
+                category: "foundation"
+            },
+            {
+                term: "오류 (Error)",
+                definition: "부정확한 결과를 만들어내는 인간의 행위",
+                importance: "필수암기",
+                category: "foundation"
+            },
+            {
+                term: "장애 (Failure)",
+                definition: "컴포넌트나 시스템이 요구되거나 기대된 기능을 명시된 제한 범위 내에서 수행하지 못하는 이벤트",
+                importance: "필수암기",
+                category: "foundation"
+            },
+            {
+                term: "검증 (Verification)",
+                definition: "작업 산출물이 해당 작업 산출물에 대한 요구사항을 제대로 반영하는지 확인 (제품을 올바르게 만들고 있는가?)",
+                importance: "필수암기",
+                category: "foundation"
+            },
+            {
+                term: "확인 (Validation)",
+                definition: "작업 산출물이 의도한 사용 목적을 충족하는지 확인 (올바른 제품을 만들고 있는가?)",
+                importance: "필수암기",
+                category: "foundation"
+            },
+            {
+                term: "테스트 레벨 (Test Level)",
+                definition: "테스트할 대상과 연관된 특정 책임을 가진 테스트 활동 그룹 (단위/통합/시스템/인수 테스팅)",
+                importance: "필수암기",
+                category: "lifecycle"
+            },
+            {
+                term: "단위 테스팅 (Unit Testing)",
+                definition: "개별 소프트웨어 컴포넌트를 테스트하는 테스트 레벨",
+                importance: "필수암기",
+                category: "lifecycle"
+            },
+            {
+                term: "통합 테스팅 (Integration Testing)",
+                definition: "통합된 컴포넌트나 시스템 간 인터페이스와 상호작용을 테스트하는 테스트 레벨",
+                importance: "필수암기",
+                category: "lifecycle"
+            },
+            {
+                term: "시스템 테스팅 (System Testing)",
+                definition: "완전하고 통합된 시스템이 명시된 요구사항을 만족하는지 테스트하는 레벨",
+                importance: "필수암기",
+                category: "lifecycle"
+            },
+            {
+                term: "인수 테스팅 (Acceptance Testing)",
+                definition: "시스템이 사용자 요구와 비즈니스 프로세스를 충족하는지 확인하는 테스트 레벨",
+                importance: "필수암기",
+                category: "lifecycle"
+            },
+            {
+                term: "회귀 테스팅 (Regression Testing)",
+                definition: "변경으로 인해 이전에 작동하던 소프트웨어에 결함이 생기지 않았는지 확인하는 테스팅",
+                importance: "필수암기",
+                category: "lifecycle"
+            },
+            {
+                term: "정적 테스팅 (Static Testing)",
+                definition: "소프트웨어를 실행하지 않고 수행하는 테스팅 (리뷰, 정적 분석)",
+                importance: "필수암기",
+                category: "static"
+            },
+            {
+                term: "동적 테스팅 (Dynamic Testing)",
+                definition: "소프트웨어를 실행하면서 수행하는 테스팅",
+                importance: "필수암기",
+                category: "static"
+            },
+            {
+                term: "리뷰 (Review)",
+                definition: "작업 산출물을 조사하여 결함을 발견하고 품질을 평가하는 정적 테스팅 활동",
+                importance: "중요",
+                category: "static"
+            },
+            {
+                term: "워크스루 (Walkthrough)",
+                definition: "저자가 주도하는 비공식적 리뷰 유형",
+                importance: "중요",
+                category: "static"
+            },
+            {
+                term: "인스펙션 (Inspection)",
+                definition: "역할이 정의되고 측정 기준을 수집하는 가장 공식적인 리뷰 유형",
+                importance: "중요",
+                category: "static"
+            },
+            {
+                term: "동등 분할 (Equivalence Partitioning)",
+                definition: "입력 도메인을 동일하게 처리될 것으로 예상되는 그룹으로 나누는 블랙박스 테스트 기법",
+                importance: "필수암기",
+                category: "technique"
+            },
+            {
+                term: "경계값 분석 (Boundary Value Analysis)",
+                definition: "분할의 경계값을 테스트 입력값으로 사용하는 블랙박스 테스트 기법",
+                importance: "필수암기",
+                category: "technique"
+            },
+            {
+                term: "결정 테이블 테스팅 (Decision Table Testing)",
+                definition: "조건의 조합과 그에 따른 동작을 테이블로 표현하는 블랙박스 테스트 기법",
+                importance: "중요",
+                category: "technique"
+            },
+            {
+                term: "상태 전이 테스팅 (State Transition Testing)",
+                definition: "시스템의 상태 변화를 테스트하는 블랙박스 테스트 기법",
+                importance: "중요",
+                category: "technique"
+            },
+            {
+                term: "구문 테스팅 (Statement Testing)",
+                definition: "모든 실행 가능한 구문을 테스트하는 화이트박스 테스트 기법",
+                importance: "필수암기",
+                category: "technique"
+            },
+            {
+                term: "결정 테스팅 (Decision Testing)",
+                definition: "모든 결정의 참/거짓 결과를 테스트하는 화이트박스 테스트 기법",
+                importance: "필수암기",
+                category: "technique"
+            },
+            {
+                term: "경험 기반 테스팅 (Experience-Based Testing)",
+                definition: "테스터의 지식과 경험을 활용하는 테스트 접근법 (오류 추정, 탐색적 테스팅, 체크리스트 기반)",
+                importance: "중요",
+                category: "technique"
+            },
+            {
+                term: "탐색적 테스팅 (Exploratory Testing)",
+                definition: "테스트 설계, 실행, 평가를 동시에 수행하는 테스팅 접근법",
+                importance: "중요",
+                category: "technique"
+            },
+            {
+                term: "테스트 계획 (Test Plan)",
+                definition: "테스트 목적, 범위, 접근법, 자원, 일정 등을 기술한 문서",
+                importance: "필수암기",
+                category: "management"
+            },
+            {
+                term: "리스크 기반 테스팅 (Risk-Based Testing)",
+                definition: "제품 리스크를 기반으로 테스트를 우선순위화하고 집중하는 접근법",
+                importance: "중요",
+                category: "management"
+            },
+            {
+                term: "테스트 모니터링 (Test Monitoring)",
+                definition: "테스트 진행 상황을 계획과 비교하여 추적하는 활동",
+                importance: "중요",
+                category: "management"
+            },
+            {
+                term: "테스트 제어 (Test Control)",
+                definition: "테스트 목적 달성을 위해 필요한 시정 조치를 취하는 활동",
+                importance: "중요",
+                category: "management"
+            },
+            {
+                term: "진입 조건 (Entry Criteria)",
+                definition: "테스트 활동을 시작하기 위한 전제 조건",
+                importance: "중요",
+                category: "management"
+            },
+            {
+                term: "종료 조건 (Exit Criteria)",
+                definition: "테스트 활동을 완료하기 위한 조건",
+                importance: "중요",
+                category: "management"
+            },
+            {
+                term: "테스트 추정 (Test Estimation)",
+                definition: "테스트에 필요한 자원과 시간을 예측하는 활동",
+                importance: "중요",
+                category: "management"
+            },
+            {
+                term: "결함 관리 (Defect Management)",
+                definition: "결함을 인지, 기록, 분류, 조사, 해결, 처리하는 프로세스",
+                importance: "필수암기",
+                category: "management"
+            },
+            {
+                term: "테스트 커버리지 (Test Coverage)",
+                definition: "테스트가 특정 커버리지 항목을 실행한 정도 (백분율로 표현)",
+                importance: "필수암기",
+                category: "technique"
+            },
+            {
+                term: "테스트 오라클 (Test Oracle)",
+                definition: "테스트 실행 결과를 판단하기 위한 기준이나 소스",
+                importance: "중요",
+                category: "foundation"
+            },
+            {
+                term: "시프트 레프트 (Shift Left)",
+                definition: "소프트웨어 개발 생명주기의 초기 단계에서 테스팅을 수행하는 접근법",
+                importance: "중요",
+                category: "lifecycle"
+            },
+            {
+                term: "테스트 피라미드 (Test Pyramid)",
+                definition: "단위 테스트를 기반으로 하고 상위 레벨로 갈수록 테스트 수가 줄어드는 구조",
+                importance: "중요",
+                category: "management"
+            }
+        ];
+
+        // 모의고사 문제 데이터
+        const quizQuestions = [
+            {
+                question: "다음 중 테스팅의 주요 목적이 아닌 것은?",
+                options: [
+                    "요구사항 충족 확인",
+                    "결함 발견",
+                    "코드 작성",
+                    "품질 수준에 대한 정보 제공"
+                ],
+                correct: 2,
+                explanation: "테스팅의 목적은 결함 발견, 품질 확인, 리스크 감소 등이며, 코드 작성은 개발 활동입니다."
+            },
+            {
+                question: "오류(Error), 결함(Defect), 장애(Failure)의 관계를 올바르게 설명한 것은?",
+                options: [
+                    "오류는 결함을 만들고, 결함은 장애를 일으킬 수 있다",
+                    "장애는 결함을 만들고, 결함은 오류를 일으킨다",
+                    "결함은 오류를 만들고, 오류는 장애를 일으킨다",
+                    "세 용어는 동일한 의미이다"
+                ],
+                correct: 0,
+                explanation: "인간의 오류(실수)가 코드의 결함을 만들고, 결함이 실행되면 장애가 발생할 수 있습니다."
+            },
+            {
+                question: "동등 분할 기법을 사용할 때, 1~100 범위의 유효 입력값에 대한 테스트 케이스로 적절한 것은?",
+                options: [
+                    "0, 50, 101",
+                    "50",
+                    "-1, 50, 101",
+                    "1, 50, 100"
+                ],
+                correct: 1,
+                explanation: "동등 분할은 각 분할에서 대표값 하나를 선택합니다. 유효 분할(1~100)의 대표값으로 50을 선택할 수 있습니다."
+            },
+            {
+                question: "경계값 분석을 2-값 경계값 분석으로 적용할 때, 1~100 범위에 대한 테스트 값은?",
+                options: [
+                    "0, 1, 100, 101",
+                    "1, 100",
+                    "0, 101",
+                    "1, 50, 100"
+                ],
+                correct: 1,
+                explanation: "2-값 경계값 분석은 유효 범위의 경계값만 테스트합니다: 최솟값(1)과 최댓값(100)."
+            },
+            {
+                question: "다음 중 화이트박스 테스트 기법은?",
+                options: [
+                    "동등 분할",
+                    "경계값 분석",
+                    "구문 커버리지",
+                    "상태 전이 테스팅"
+                ],
+                correct: 2,
+                explanation: "구문 커버리지는 코드 구조를 기반으로 하는 화이트박스 테스트 기법입니다."
+            },
+            {
+                question: "V-모델에서 단위 테스팅과 대응되는 개발 단계는?",
+                options: [
+                    "요구사항 분석",
+                    "상세 설계",
+                    "아키텍처 설계",
+                    "비즈니스 요구사항"
+                ],
+                correct: 1,
+                explanation: "V-모델에서 단위 테스팅은 상세 설계(컴포넌트 설계) 단계와 대응됩니다."
+            },
+            {
+                question: "정적 테스팅의 장점이 아닌 것은?",
+                options: [
+                    "초기 결함 발견",
+                    "런타임 오류 발견",
+                    "코딩 표준 준수 확인",
+                    "요구사항 결함 발견"
+                ],
+                correct: 1,
+                explanation: "런타임 오류는 프로그램을 실행해야 발견할 수 있으므로 동적 테스팅에서 발견됩니다."
+            },
+            {
+                question: "다음 중 가장 공식적인 리뷰 유형은?",
+                options: [
+                    "비공식 리뷰",
+                    "워크스루",
+                    "기술 리뷰",
+                    "인스펙션"
+                ],
+                correct: 3,
+                explanation: "인스펙션은 역할이 명확히 정의되고 체크리스트를 사용하며 메트릭을 수집하는 가장 공식적인 리뷰입니다."
+            },
+            {
+                question: "회귀 테스팅을 수행하는 주요 이유는?",
+                options: [
+                    "새로운 기능 테스트",
+                    "변경이 기존 기능에 영향을 주지 않았는지 확인",
+                    "성능 개선 확인",
+                    "사용자 요구사항 확인"
+                ],
+                correct: 1,
+                explanation: "회귀 테스팅은 수정이나 변경이 기존의 정상 동작하던 기능에 부정적 영향을 주지 않았는지 확인합니다."
+            },
+            {
+                question: "리스크 기반 테스팅의 주요 목적은?",
+                options: [
+                    "모든 기능을 동일하게 테스트",
+                    "가장 중요하고 위험한 부분에 테스트 집중",
+                    "테스트 비용 최소화",
+                    "테스트 자동화 극대화"
+                ],
+                correct: 1,
+                explanation: "리스크 기반 테스팅은 제품 리스크가 높은 영역에 테스트 노력을 집중하여 효율성을 높입니다."
+            },
+            {
+                question: "테스트 레벨의 올바른 순서는?",
+                options: [
+                    "단위 → 통합 → 시스템 → 인수",
+                    "인수 → 시스템 → 통합 → 단위",
+                    "통합 → 단위 → 시스템 → 인수",
+                    "시스템 → 단위 → 통합 → 인수"
+                ],
+                correct: 0,
+                explanation: "일반적인 테스트 레벨 순서는 단위 테스팅 → 통합 테스팅 → 시스템 테스팅 → 인수 테스팅입니다."
+            },
+            {
+                question: "탐색적 테스팅의 특징은?",
+                options: [
+                    "사전에 상세한 테스트 케이스 작성",
+                    "테스트 설계와 실행을 동시에 수행",
+                    "자동화가 필수",
+                    "정적 테스팅 기법"
+                ],
+                correct: 1,
+                explanation: "탐색적 테스팅은 학습, 테스트 설계, 테스트 실행을 동시에 수행하는 경험 기반 기법입니다."
+            },
+            {
+                question: "100% 구문 커버리지를 달성했다면?",
+                options: [
+                    "모든 결함을 발견했다",
+                    "100% 결정 커버리지도 달성했다",
+                    "모든 실행 가능한 구문을 최소 한 번 실행했다",
+                    "추가 테스트가 불필요하다"
+                ],
+                correct: 2,
+                explanation: "100% 구문 커버리지는 모든 실행 가능한 코드 라인을 최소 한 번 실행했음을 의미합니다."
+            },
+            {
+                question: "결정 테이블 테스팅이 유용한 경우는?",
+                options: [
+                    "순차적 처리 로직",
+                    "복잡한 비즈니스 규칙과 조건 조합",
+                    "성능 테스트",
+                    "사용성 테스트"
+                ],
+                correct: 1,
+                explanation: "결정 테이블은 여러 조건의 조합과 그에 따른 동작을 체계적으로 테스트할 때 유용합니다."
+            },
+            {
+                question: "'검증'과 '확인'의 차이를 올바르게 설명한 것은?",
+                options: [
+                    "검증은 '올바른 제품을 만드는가', 확인은 '제품을 올바르게 만드는가'",
+                    "검증은 '제품을 올바르게 만드는가', 확인은 '올바른 제품을 만드는가'",
+                    "두 용어는 동일한 의미",
+                    "검증은 동적 테스팅, 확인은 정적 테스팅"
+                ],
+                correct: 1,
+                explanation: "검증(Verification)은 '제품을 올바르게 만들고 있는가', 확인(Validation)은 '올바른 제품을 만들고 있는가'를 확인합니다."
+            },
+            {
+                question: "테스트 종료 조건(Exit Criteria)의 예가 아닌 것은?",
+                options: [
+                    "계획된 테스트 케이스의 95% 실행",
+                    "치명적 결함 0개",
+                    "테스트 환경 준비 완료",
+                    "코드 커버리지 80% 달성"
+                ],
+                correct: 2,
+                explanation: "테스트 환경 준비는 진입 조건(Entry Criteria)에 해당합니다."
+            },
+            {
+                question: "시프트 레프트(Shift Left) 접근법의 장점은?",
+                options: [
+                    "테스트 자동화 불필요",
+                    "초기 결함 발견으로 비용 절감",
+                    "테스터 수 감소",
+                    "문서화 불필요"
+                ],
+                correct: 1,
+                explanation: "시프트 레프트는 개발 초기에 테스팅을 수행하여 결함을 조기에 발견하고 수정 비용을 절감합니다."
+            },
+            {
+                question: "애자일 개발에서 테스팅의 특징은?",
+                options: [
+                    "개발 완료 후 테스팅 시작",
+                    "변경을 최소화",
+                    "지속적인 테스팅과 빠른 피드백",
+                    "상세한 문서 작성 필수"
+                ],
+                correct: 2,
+                explanation: "애자일에서는 각 스프린트/이터레이션마다 지속적으로 테스팅하고 빠른 피드백을 제공합니다."
+            },
+            {
+                question: "테스트 자동화가 가장 효과적인 테스트 유형은?",
+                options: [
+                    "탐색적 테스팅",
+                    "사용성 테스팅",
+                    "회귀 테스팅",
+                    "인수 테스팅"
+                ],
+                correct: 2,
+                explanation: "회귀 테스팅은 반복적으로 수행되므로 자동화의 ROI가 가장 높습니다."
+            },
+            {
+                question: "결함 우선순위와 심각도의 관계는?",
+                options: [
+                    "항상 일치한다",
+                    "심각도가 높으면 우선순위도 항상 높다",
+                    "독립적으로 결정될 수 있다",
+                    "우선순위가 심각도를 결정한다"
+                ],
+                correct: 2,
+                explanation: "심각도는 기술적 영향, 우선순위는 비즈니스 중요도를 반영하므로 독립적으로 결정될 수 있습니다."
+            }
+        ];
+
+        // 전역 변수
+        let currentQuestionIndex = 0;
+        let currentCardIndex = 0;
+        let score = 0;
+        let answeredQuestions = [];
+        let currentFilter = 'all';
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            displayTerms('all');
+            loadFlashcard();
+        });
+
+        // 섹션 전환
+        function showSection(sectionName) {
+            // 모든 탭과 섹션 비활성화
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            
+            // 선택된 탭과 섹션 활성화
+            event.target.classList.add('active');
+            document.getElementById(sectionName).classList.add('active');
+            
+            // 모의고사 섹션이면 문제 로드
+            if (sectionName === 'quiz') {
+                startQuiz();
+            }
+        }
+
+        // 용어 필터링
+        function filterTerms(category) {
+            currentFilter = category;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            displayTerms(category);
+        }
+
+        // 용어 표시
+        function displayTerms(category) {
+            const container = document.getElementById('terms-container');
+            container.innerHTML = '';
+            
+            const filteredTerms = category === 'all' 
+                ? terms 
+                : terms.filter(t => t.category === category);
+            
+            filteredTerms.forEach(term => {
+                const termCard = document.createElement('div');
+                termCard.className = 'term-card';
+                termCard.innerHTML = `
+                    <div class="term-title">${term.term}</div>
+                    <div class="term-definition">${term.definition}</div>
+                    ${term.details ? `<div class="term-definition" style="font-size: 14px; color: #7f8c8d; margin-top: 10px;">💡 ${term.details}</div>` : ''}
+                    <div>
+                        <span class="term-importance">${term.importance}</span>
+                        <span class="term-category">${getCategoryName(term.category)}</span>
+                    </div>
+                `;
+                container.appendChild(termCard);
+            });
+        }
+
+        // 카테고리 이름 변환
+        function getCategoryName(category) {
+            const names = {
+                'foundation': '테스팅 기초',
+                'lifecycle': '생명주기',
+                'static': '정적 테스팅',
+                'technique': '테스트 기법',
+                'management': '테스트 관리'
+            };
+            return names[category] || category;
+        }
+
+        // 모의고사 시작
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            answeredQuestions = [];
+            shuffleArray(quizQuestions);
+            loadQuestion();
+        }
+
+        // 문제 로드
+        function loadQuestion() {
+            if (currentQuestionIndex >= quizQuestions.length) {
+                showQuizResult();
+                return;
+            }
+            
+            const question = quizQuestions[currentQuestionIndex];
+            const container = document.getElementById('quiz-container');
+            
+            // 진도 업데이트
+            const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            document.getElementById('quiz-progress').style.width = progress + '%';
+            
+            container.innerHTML = `
+                <div class="question-number">문제 ${currentQuestionIndex + 1} / ${quizQuestions.length}</div>
+                <div class="question">${question.question}</div>
+                <div class="options">
+                    ${question.options.map((option, index) => `
+                        <div class="option" onclick="selectOption(${index})">
+                            <input type="radio" name="answer" value="${index}" id="option${index}">
+                            <label for="option${index}" style="cursor: pointer; width: 100%;">${option}</label>
+                        </div>
+                    `).join('')}
+                </div>
+                <div id="explanation" style="display: none;"></div>
+                <div class="quiz-controls">
+                    <button class="btn btn-secondary" onclick="skipQuestion()" id="skip-btn">건너뛰기</button>
+                    <button class="btn btn-primary" onclick="submitAnswer()" id="submit-btn">답안 제출</button>
+                    <button class="btn btn-success" onclick="nextQuestion()" id="next-btn" style="display: none;">다음 문제</button>
+                </div>
+            `;
+        }
+
+        // 옵션 선택
+        function selectOption(index) {
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelectorAll('.option')[index].classList.add('selected');
+            document.getElementById(`option${index}`).checked = true;
+        }
+
+        // 답안 제출
+        function submitAnswer() {
+            const selected = document.querySelector('input[name="answer"]:checked');
+            if (!selected) {
+                alert('답을 선택해주세요!');
+                return;
+            }
+            
+            const selectedIndex = parseInt(selected.value);
+            const question = quizQuestions[currentQuestionIndex];
+            const isCorrect = selectedIndex === question.correct;
+            
+            // 정답/오답 표시
+            document.querySelectorAll('.option').forEach((opt, index) => {
+                opt.onclick = null;
+                if (index === question.correct) {
+                    opt.classList.add('correct');
+                } else if (index === selectedIndex && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            // 설명 표시
+            const explanationDiv = document.getElementById('explanation');
+            explanationDiv.className = 'explanation';
+            explanationDiv.style.display = 'block';
+            explanationDiv.innerHTML = `
+                <h4>${isCorrect ? '✅ 정답입니다!' : '❌ 틀렸습니다.'}</h4>
+                <p>${question.explanation}</p>
+            `;
+            
+            if (isCorrect) score++;
+            answeredQuestions.push({
+                question: question.question,
+                correct: isCorrect
+            });
+            
+            // 버튼 상태 변경
+            document.getElementById('submit-btn').style.display = 'none';
+            document.getElementById('skip-btn').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'inline-block';
+        }
+
+        // 문제 건너뛰기
+        function skipQuestion() {
+            answeredQuestions.push({
+                question: quizQuestions[currentQuestionIndex].question,
+                correct: false,
+                skipped: true
+            });
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        // 다음 문제
+        function nextQuestion() {
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        // 결과 표시
+        function showQuizResult() {
+            const container = document.getElementById('quiz-container');
+            const percentage = Math.round((score / quizQuestions.length) * 100);
+            
+            container.innerHTML = `
+                <div class="score-display">
+                    <h2>🎉 테스트 완료!</h2>
+                    <h2>${score} / ${quizQuestions.length}</h2>
+                    <p>정답률: ${percentage}%</p>
+                    <p>${percentage >= 70 ? '합격 기준을 통과했습니다!' : '더 연습이 필요합니다.'}</p>
+                    <button class="btn btn-primary" onclick="startQuiz()" style="margin-top: 20px;">다시 시작</button>
+                </div>
+            `;
+        }
+
+        // 플래시카드 관련 함수
+        function loadFlashcard() {
+            const term = terms[currentCardIndex];
+            document.getElementById('flashcard-term').textContent = term.term;
+            document.getElementById('flashcard-definition').textContent = term.definition;
+            document.getElementById('card-counter').textContent = `${currentCardIndex + 1} / ${terms.length}`;
+            
+            // 카드 앞면 표시
+            document.getElementById('card-front').style.display = 'block';
+            document.getElementById('card-back').style.display = 'none';
+        }
+
+        function flipCard() {
+            const front = document.getElementById('card-front');
+            const back = document.getElementById('card-back');
+            
+            if (front.style.display !== 'none') {
+                front.style.display = 'none';
+                back.style.display = 'block';
+            } else {
+                front.style.display = 'block';
+                back.style.display = 'none';
+            }
+        }
+
+        function nextCard() {
+            currentCardIndex = (currentCardIndex + 1) % terms.length;
+            loadFlashcard();
+        }
+
+        function previousCard() {
+            currentCardIndex = currentCardIndex === 0 ? terms.length - 1 : currentCardIndex - 1;
+            loadFlashcard();
+        }
+
+        // 배열 섞기 함수
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+    </script>
+</body>
+</html>
