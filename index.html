@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISTQB CTFL 모의고사 CBT</title>
+    <title>ISTQB CTFL 모의고사 CBT - Enhanced</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -39,23 +39,49 @@
             margin-bottom: 10px;
         }
 
+        .stats-bar {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
         .tabs {
             display: flex;
             background: #f8f9fa;
             border-bottom: 2px solid #dee2e6;
+            flex-wrap: wrap;
         }
 
         .tab {
             flex: 1;
-            padding: 20px;
+            min-width: 100px;
+            padding: 20px 15px;
             text-align: center;
             cursor: pointer;
             background: #f8f9fa;
             border: none;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: #495057;
             transition: all 0.3s;
+            position: relative;
         }
 
         .tab.active {
@@ -66,6 +92,17 @@
 
         .tab:hover {
             background: #e9ecef;
+        }
+
+        .tab .badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 11px;
         }
 
         .content {
@@ -94,6 +131,26 @@
             padding: 30px;
             margin-bottom: 20px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            position: relative;
+        }
+
+        .term-card.bookmarked {
+            border: 2px solid #f39c12;
+        }
+
+        .bookmark-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ddd;
+        }
+
+        .bookmark-btn.active {
+            color: #f39c12;
         }
 
         .term-title {
@@ -101,6 +158,7 @@
             color: #2c3e50;
             margin-bottom: 15px;
             font-weight: bold;
+            padding-right: 40px;
         }
 
         .term-definition {
@@ -229,6 +287,11 @@
             color: white;
         }
 
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
         .score-display {
             text-align: center;
             padding: 30px;
@@ -241,6 +304,141 @@
         .score-display h2 {
             font-size: 36px;
             margin-bottom: 10px;
+        }
+
+        /* 오답노트 스타일 */
+        .review-item {
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .review-item.incorrect {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .review-item.correct {
+            border-left: 5px solid #27ae60;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .review-status {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .review-tag {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tag-incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .tag-correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .tag-category {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .review-question {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .review-options {
+            margin-bottom: 20px;
+        }
+
+        .review-option {
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            position: relative;
+            padding-left: 35px;
+        }
+
+        .review-option.user-selected {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+        }
+
+        .review-option.correct-answer {
+            background: #d4edda;
+            border: 1px solid #27ae60;
+        }
+
+        .review-option::before {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .review-option.user-selected::before {
+            content: "👤";
+        }
+
+        .review-option.correct-answer::before {
+            content: "✅";
+        }
+
+        .review-explanation {
+            background: #e8f4fd;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        .review-explanation h4 {
+            color: #2980b9;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .review-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border: 2px solid #dee2e6;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .filter-btn.active {
+            background: #5e72e4;
+            color: white;
+            border-color: #5e72e4;
         }
 
         /* 학습 진도 */
@@ -258,28 +456,6 @@
             transition: width 0.5s;
         }
 
-        .filter-buttons {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 8px 20px;
-            border: 2px solid #dee2e6;
-            background: white;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .filter-btn.active {
-            background: #5e72e4;
-            color: white;
-            border-color: #5e72e4;
-        }
-
         .explanation {
             background: #e8f4fd;
             border-left: 4px solid #3498db;
@@ -292,6 +468,111 @@
             color: #2980b9;
             margin-bottom: 10px;
         }
+
+        /* 플래시카드 스타일 개선 */
+        .flashcard-container {
+            perspective: 1000px;
+            margin-bottom: 30px;
+        }
+
+        .flashcard {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .flashcard:hover {
+            transform: scale(1.02);
+        }
+
+        .difficulty-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 15px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .study-mode-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .mode-btn {
+            padding: 10px 20px;
+            border: 2px solid #5e72e4;
+            background: white;
+            color: #5e72e4;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mode-btn.active {
+            background: #5e72e4;
+            color: white;
+        }
+
+        /* 통계 대시보드 */
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            .tabs {
+                overflow-x: auto;
+            }
+            
+            .tab {
+                min-width: 120px;
+            }
+            
+            .quiz-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -299,12 +580,31 @@
         <div class="header">
             <h1>🎓 ISTQB CTFL 모의고사</h1>
             <p>Certified Tester Foundation Level v4.0</p>
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value" id="total-solved">0</div>
+                    <div class="stat-label">총 문제</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="correct-rate">0%</div>
+                    <div class="stat-label">정답률</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="study-streak">0</div>
+                    <div class="stat-label">연속 학습</div>
+                </div>
+            </div>
         </div>
 
         <div class="tabs">
             <button class="tab active" onclick="showSection('terms')">📚 핵심 용어</button>
             <button class="tab" onclick="showSection('quiz')">📝 모의고사</button>
             <button class="tab" onclick="showSection('flashcard')">🔄 플래시카드</button>
+            <button class="tab" onclick="showSection('review')">
+                📊 오답노트
+                <span class="badge" id="review-badge" style="display: none;">0</span>
+            </button>
+            <button class="tab" onclick="showSection('stats')">📈 학습 통계</button>
         </div>
 
         <div class="content">
@@ -319,6 +619,7 @@
                     <button class="filter-btn" onclick="filterTerms('static')">정적 테스팅</button>
                     <button class="filter-btn" onclick="filterTerms('technique')">테스트 기법</button>
                     <button class="filter-btn" onclick="filterTerms('management')">테스트 관리</button>
+                    <button class="filter-btn" onclick="filterTerms('bookmarked')">⭐ 북마크</button>
                 </div>
 
                 <div id="terms-container"></div>
@@ -327,6 +628,13 @@
             <!-- 모의고사 섹션 -->
             <div id="quiz" class="section">
                 <h2 style="margin-bottom: 20px;">CBT 모의고사</h2>
+                
+                <div class="study-mode-selector">
+                    <button class="mode-btn active" onclick="setQuizMode('all')">전체 문제</button>
+                    <button class="mode-btn" onclick="setQuizMode('incorrect')">오답만</button>
+                    <button class="mode-btn" onclick="setQuizMode('bookmarked')">북마크</button>
+                </div>
+                
                 <div class="progress-bar">
                     <div class="progress-fill" id="quiz-progress" style="width: 0%;"></div>
                 </div>
@@ -338,20 +646,76 @@
             <!-- 플래시카드 섹션 -->
             <div id="flashcard" class="section">
                 <h2 style="margin-bottom: 20px;">플래시카드 학습</h2>
+                
+                <div class="study-mode-selector">
+                    <button class="mode-btn active" onclick="setFlashcardMode('all')">전체</button>
+                    <button class="mode-btn" onclick="setFlashcardMode('important')">필수암기만</button>
+                    <button class="mode-btn" onclick="setFlashcardMode('bookmarked')">북마크</button>
+                </div>
+                
                 <div id="flashcard-container" style="text-align: center;">
-                    <div class="term-card" style="cursor: pointer; min-height: 300px; display: flex; flex-direction: column; justify-content: center;" onclick="flipCard()">
+                    <div class="flashcard" onclick="flipCard()">
+                        <div class="difficulty-indicator" id="card-importance"></div>
                         <div id="card-front">
-                            <h3 id="flashcard-term" style="font-size: 28px; color: #2c3e50;"></h3>
-                            <p style="margin-top: 20px; color: #7f8c8d;">클릭하여 정의 보기</p>
+                            <h3 id="flashcard-term" style="font-size: 32px;"></h3>
+                            <p style="margin-top: 20px; opacity: 0.9;">클릭하여 정의 보기</p>
                         </div>
                         <div id="card-back" style="display: none;">
-                            <p id="flashcard-definition" style="font-size: 18px; line-height: 1.8;"></p>
+                            <p id="flashcard-definition" style="font-size: 20px; line-height: 1.8;"></p>
                         </div>
                     </div>
                     <div style="margin-top: 20px;">
                         <button class="btn btn-secondary" onclick="previousCard()">⬅ 이전</button>
                         <span style="margin: 0 20px;" id="card-counter">1 / 10</span>
+                        <button class="btn btn-warning" onclick="bookmarkCard()">⭐ 북마크</button>
                         <button class="btn btn-primary" onclick="nextCard()">다음 ➡</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 오답노트 섹션 -->
+            <div id="review" class="section">
+                <h2 style="margin-bottom: 20px;">오답노트 & 복습</h2>
+                
+                <div class="review-filters">
+                    <button class="filter-btn active" onclick="filterReview('all')">전체</button>
+                    <button class="filter-btn" onclick="filterReview('incorrect')">오답만</button>
+                    <button class="filter-btn" onclick="filterReview('correct')">정답</button>
+                    <button class="filter-btn" onclick="filterReview('bookmarked')">북마크</button>
+                </div>
+                
+                <div id="review-container">
+                    <!-- 오답노트 내용이 여기에 로드됨 -->
+                </div>
+            </div>
+
+            <!-- 학습 통계 섹션 -->
+            <div id="stats" class="section">
+                <h2 style="margin-bottom: 20px;">학습 통계 대시보드</h2>
+                
+                <div class="stats-dashboard">
+                    <div class="stat-card">
+                        <h3 id="stat-total">0</h3>
+                        <p>총 학습 문제</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="stat-correct">0%</h3>
+                        <p>전체 정답률</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="stat-weak">-</h3>
+                        <p>취약 영역</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3 id="stat-strong">-</h3>
+                        <p>강점 영역</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <h3>카테고리별 성과</h3>
+                    <div id="category-stats" style="margin-top: 20px;">
+                        <!-- 카테고리별 통계가 여기에 로드됨 -->
                     </div>
                 </div>
             </div>
@@ -359,6 +723,32 @@
     </div>
 
     <script>
+        // 오답노트 데이터 통합
+        const reviewData = {
+            "오답노트": [
+                {"문제": "회귀 테스팅을 수행하는 가장 중요한 이유는?", "답변": "변경사항이 기존 기능에 영향을 주지 않았는지 확인", "카테고리": "테스트 레벨"},
+                {"문제": "테스트 레벨의 순서로 올바른 것은?", "답변": "단위 테스팅 → 통합 테스팅 → 시스템 테스팅 → 인수 테스팅", "카테고리": "테스트 레벨"},
+                {"문제": "V모델에서 단위 테스팅과 대응되는 개발 활동은?", "답변": "상세 설계", "카테고리": "테스트 레벨"},
+                {"문제": "시프트 레프트(Shift-Left) 접근법의 주요 이점은?", "답변": "결함을 조기에 발견하여 수정 비용 절감", "카테고리": "테스트 원칙"},
+                {"문제": "오류(Error), 결함(Defect), 장애(Failure)의 관계로 올바른 것은?", "답변": "오류가 결함을 만들고, 결함이 장애를 일으킬 수 있다", "카테고리": "테스트 기초"},
+                {"문제": "동등 분할(Equivalence Partitioning) 기법의 목적은?", "답변": "입력 도메인을 동일하게 처리될 것으로 예상되는 그룹으로 나누어 대표값을 테스트", "카테고리": "테스트 기법"},
+                {"문제": "경계값 분석(Boundary Value Analysis)에서 2-포인트 기법을 적용할 때 테스트하는 값은?", "답변": "유효 범위의 최솟값과 최댓값", "카테고리": "테스트 기법"},
+                {"문제": "100% 구문 커버리지(Statement Coverage)를 달성했다는 의미는?", "답변": "모든 실행 가능한 코드 라인이 최소 한 번 실행되었음", "카테고리": "테스트 기법"},
+                {"문제": "결정 테이블 테스팅이 가장 유용한 상황은?", "답변": "복잡한 비즈니스 규칙과 여러 조건의 조합을 테스트할 때", "카테고리": "테스트 기법"},
+                {"문제": "탐색적 테스팅의 특징은?", "답변": "학습, 테스트 설계, 테스트 실행을 동시에 수행", "카테고리": "테스트 기법"},
+                {"문제": "정적 테스팅과 동적 테스팅의 차이는?", "답변": "정적: 코드를 실행하지 않고 수행, 동적: 코드를 실행하며 수행", "카테고리": "정적 테스팅"},
+                {"문제": "가장 공식적인 리뷰 유형은?", "답변": "인스펙션(Inspection) - 역할 정의, 체크리스트 사용, 메트릭 수집", "카테고리": "정적 테스팅"},
+                {"문제": "리스크 기반 테스팅의 주요 목적은?", "답변": "제품 리스크가 높은 영역에 테스트 노력을 집중", "카테고리": "테스트 관리"},
+                {"문제": "테스트 종료 조건(Exit Criteria)의 예시가 아닌 것은?", "답변": "테스트 환경 준비 완료 (이것은 진입 조건)", "카테고리": "테스트 관리"},
+                {"문제": "애자일 개발에서 테스팅의 특징은?", "답변": "각 스프린트마다 지속적 테스팅과 빠른 피드백", "카테고리": "개발 방법론"},
+                {"문제": "테스트 자동화가 가장 효과적인 테스트 유형은?", "답변": "회귀 테스팅 (반복 실행으로 ROI 높음)", "카테고리": "테스트 자동화"},
+                {"문제": "검증(Verification)과 확인(Validation)의 차이는?", "답변": "검증: 제품을 올바르게 만드는가, 확인: 올바른 제품을 만드는가", "카테고리": "테스트 기초"},
+                {"문제": "결함 우선순위와 심각도의 관계는?", "답변": "독립적으로 결정 가능 (심각도: 기술적 영향, 우선순위: 비즈니스 중요도)", "카테고리": "결함 관리"},
+                {"문제": "테스트 피라미드의 구조는?", "답변": "하단에 단위 테스트(많음), 중간에 통합 테스트, 상단에 E2E 테스트(적음)", "카테고리": "테스트 전략"},
+                {"문제": "테스트 오라클(Test Oracle)이란?", "답변": "테스트 실행 결과가 올바른지 판단하기 위한 정보의 소스", "카테고리": "테스트 기초"}
+            ]
+        };
+
         // 핵심 용어 데이터
         const terms = [
             {
@@ -592,9 +982,10 @@
             }
         ];
 
-        // 모의고사 문제 데이터
+        // 모의고사 문제 데이터 (오답노트 내용 반영하여 확장)
         const quizQuestions = [
             {
+                id: 1,
                 question: "다음 중 테스팅의 주요 목적이 아닌 것은?",
                 options: [
                     "요구사항 충족 확인",
@@ -603,9 +994,11 @@
                     "품질 수준에 대한 정보 제공"
                 ],
                 correct: 2,
-                explanation: "테스팅의 목적은 결함 발견, 품질 확인, 리스크 감소 등이며, 코드 작성은 개발 활동입니다."
+                explanation: "테스팅의 목적은 결함 발견, 품질 확인, 리스크 감소 등이며, 코드 작성은 개발 활동입니다.",
+                category: "foundation"
             },
             {
+                id: 2,
                 question: "오류(Error), 결함(Defect), 장애(Failure)의 관계를 올바르게 설명한 것은?",
                 options: [
                     "오류는 결함을 만들고, 결함은 장애를 일으킬 수 있다",
@@ -614,9 +1007,11 @@
                     "세 용어는 동일한 의미이다"
                 ],
                 correct: 0,
-                explanation: "인간의 오류(실수)가 코드의 결함을 만들고, 결함이 실행되면 장애가 발생할 수 있습니다."
+                explanation: "인간의 오류(실수)가 코드의 결함을 만들고, 결함이 실행되면 장애가 발생할 수 있습니다.",
+                category: "foundation"
             },
             {
+                id: 3,
                 question: "동등 분할 기법을 사용할 때, 1~100 범위의 유효 입력값에 대한 테스트 케이스로 적절한 것은?",
                 options: [
                     "0, 50, 101",
@@ -625,9 +1020,11 @@
                     "1, 50, 100"
                 ],
                 correct: 1,
-                explanation: "동등 분할은 각 분할에서 대표값 하나를 선택합니다. 유효 분할(1~100)의 대표값으로 50을 선택할 수 있습니다."
+                explanation: "동등 분할은 각 분할에서 대표값 하나를 선택합니다. 유효 분할(1~100)의 대표값으로 50을 선택할 수 있습니다.",
+                category: "technique"
             },
             {
+                id: 4,
                 question: "경계값 분석을 2-값 경계값 분석으로 적용할 때, 1~100 범위에 대한 테스트 값은?",
                 options: [
                     "0, 1, 100, 101",
@@ -636,9 +1033,11 @@
                     "1, 50, 100"
                 ],
                 correct: 1,
-                explanation: "2-값 경계값 분석은 유효 범위의 경계값만 테스트합니다: 최솟값(1)과 최댓값(100)."
+                explanation: "2-값 경계값 분석은 유효 범위의 경계값만 테스트합니다: 최솟값(1)과 최댓값(100).",
+                category: "technique"
             },
             {
+                id: 5,
                 question: "다음 중 화이트박스 테스트 기법은?",
                 options: [
                     "동등 분할",
@@ -647,9 +1046,11 @@
                     "상태 전이 테스팅"
                 ],
                 correct: 2,
-                explanation: "구문 커버리지는 코드 구조를 기반으로 하는 화이트박스 테스트 기법입니다."
+                explanation: "구문 커버리지는 코드 구조를 기반으로 하는 화이트박스 테스트 기법입니다.",
+                category: "technique"
             },
             {
+                id: 6,
                 question: "V-모델에서 단위 테스팅과 대응되는 개발 단계는?",
                 options: [
                     "요구사항 분석",
@@ -658,9 +1059,11 @@
                     "비즈니스 요구사항"
                 ],
                 correct: 1,
-                explanation: "V-모델에서 단위 테스팅은 상세 설계(컴포넌트 설계) 단계와 대응됩니다."
+                explanation: "V-모델에서 단위 테스팅은 상세 설계(컴포넌트 설계) 단계와 대응됩니다.",
+                category: "lifecycle"
             },
             {
+                id: 7,
                 question: "정적 테스팅의 장점이 아닌 것은?",
                 options: [
                     "초기 결함 발견",
@@ -669,9 +1072,11 @@
                     "요구사항 결함 발견"
                 ],
                 correct: 1,
-                explanation: "런타임 오류는 프로그램을 실행해야 발견할 수 있으므로 동적 테스팅에서 발견됩니다."
+                explanation: "런타임 오류는 프로그램을 실행해야 발견할 수 있으므로 동적 테스팅에서 발견됩니다.",
+                category: "static"
             },
             {
+                id: 8,
                 question: "다음 중 가장 공식적인 리뷰 유형은?",
                 options: [
                     "비공식 리뷰",
@@ -680,9 +1085,11 @@
                     "인스펙션"
                 ],
                 correct: 3,
-                explanation: "인스펙션은 역할이 명확히 정의되고 체크리스트를 사용하며 메트릭을 수집하는 가장 공식적인 리뷰입니다."
+                explanation: "인스펙션은 역할이 명확히 정의되고 체크리스트를 사용하며 메트릭을 수집하는 가장 공식적인 리뷰입니다.",
+                category: "static"
             },
             {
+                id: 9,
                 question: "회귀 테스팅을 수행하는 주요 이유는?",
                 options: [
                     "새로운 기능 테스트",
@@ -691,9 +1098,11 @@
                     "사용자 요구사항 확인"
                 ],
                 correct: 1,
-                explanation: "회귀 테스팅은 수정이나 변경이 기존의 정상 동작하던 기능에 부정적 영향을 주지 않았는지 확인합니다."
+                explanation: "회귀 테스팅은 수정이나 변경이 기존의 정상 동작하던 기능에 부정적 영향을 주지 않았는지 확인합니다.",
+                category: "lifecycle"
             },
             {
+                id: 10,
                 question: "리스크 기반 테스팅의 주요 목적은?",
                 options: [
                     "모든 기능을 동일하게 테스트",
@@ -702,9 +1111,11 @@
                     "테스트 자동화 극대화"
                 ],
                 correct: 1,
-                explanation: "리스크 기반 테스팅은 제품 리스크가 높은 영역에 테스트 노력을 집중하여 효율성을 높입니다."
+                explanation: "리스크 기반 테스팅은 제품 리스크가 높은 영역에 테스트 노력을 집중하여 효율성을 높입니다.",
+                category: "management"
             },
             {
+                id: 11,
                 question: "테스트 레벨의 올바른 순서는?",
                 options: [
                     "단위 → 통합 → 시스템 → 인수",
@@ -713,9 +1124,11 @@
                     "시스템 → 단위 → 통합 → 인수"
                 ],
                 correct: 0,
-                explanation: "일반적인 테스트 레벨 순서는 단위 테스팅 → 통합 테스팅 → 시스템 테스팅 → 인수 테스팅입니다."
+                explanation: "일반적인 테스트 레벨 순서는 단위 테스팅 → 통합 테스팅 → 시스템 테스팅 → 인수 테스팅입니다.",
+                category: "lifecycle"
             },
             {
+                id: 12,
                 question: "탐색적 테스팅의 특징은?",
                 options: [
                     "사전에 상세한 테스트 케이스 작성",
@@ -724,9 +1137,11 @@
                     "정적 테스팅 기법"
                 ],
                 correct: 1,
-                explanation: "탐색적 테스팅은 학습, 테스트 설계, 테스트 실행을 동시에 수행하는 경험 기반 기법입니다."
+                explanation: "탐색적 테스팅은 학습, 테스트 설계, 테스트 실행을 동시에 수행하는 경험 기반 기법입니다.",
+                category: "technique"
             },
             {
+                id: 13,
                 question: "100% 구문 커버리지를 달성했다면?",
                 options: [
                     "모든 결함을 발견했다",
@@ -735,9 +1150,11 @@
                     "추가 테스트가 불필요하다"
                 ],
                 correct: 2,
-                explanation: "100% 구문 커버리지는 모든 실행 가능한 코드 라인을 최소 한 번 실행했음을 의미합니다."
+                explanation: "100% 구문 커버리지는 모든 실행 가능한 코드 라인을 최소 한 번 실행했음을 의미합니다.",
+                category: "technique"
             },
             {
+                id: 14,
                 question: "결정 테이블 테스팅이 유용한 경우는?",
                 options: [
                     "순차적 처리 로직",
@@ -746,9 +1163,11 @@
                     "사용성 테스트"
                 ],
                 correct: 1,
-                explanation: "결정 테이블은 여러 조건의 조합과 그에 따른 동작을 체계적으로 테스트할 때 유용합니다."
+                explanation: "결정 테이블은 여러 조건의 조합과 그에 따른 동작을 체계적으로 테스트할 때 유용합니다.",
+                category: "technique"
             },
             {
+                id: 15,
                 question: "'검증'과 '확인'의 차이를 올바르게 설명한 것은?",
                 options: [
                     "검증은 '올바른 제품을 만드는가', 확인은 '제품을 올바르게 만드는가'",
@@ -757,9 +1176,11 @@
                     "검증은 동적 테스팅, 확인은 정적 테스팅"
                 ],
                 correct: 1,
-                explanation: "검증(Verification)은 '제품을 올바르게 만들고 있는가', 확인(Validation)은 '올바른 제품을 만들고 있는가'를 확인합니다."
+                explanation: "검증(Verification)은 '제품을 올바르게 만들고 있는가', 확인(Validation)은 '올바른 제품을 만들고 있는가'를 확인합니다.",
+                category: "foundation"
             },
             {
+                id: 16,
                 question: "테스트 종료 조건(Exit Criteria)의 예가 아닌 것은?",
                 options: [
                     "계획된 테스트 케이스의 95% 실행",
@@ -768,9 +1189,11 @@
                     "코드 커버리지 80% 달성"
                 ],
                 correct: 2,
-                explanation: "테스트 환경 준비는 진입 조건(Entry Criteria)에 해당합니다."
+                explanation: "테스트 환경 준비는 진입 조건(Entry Criteria)에 해당합니다.",
+                category: "management"
             },
             {
+                id: 17,
                 question: "시프트 레프트(Shift Left) 접근법의 장점은?",
                 options: [
                     "테스트 자동화 불필요",
@@ -779,9 +1202,11 @@
                     "문서화 불필요"
                 ],
                 correct: 1,
-                explanation: "시프트 레프트는 개발 초기에 테스팅을 수행하여 결함을 조기에 발견하고 수정 비용을 절감합니다."
+                explanation: "시프트 레프트는 개발 초기에 테스팅을 수행하여 결함을 조기에 발견하고 수정 비용을 절감합니다.",
+                category: "lifecycle"
             },
             {
+                id: 18,
                 question: "애자일 개발에서 테스팅의 특징은?",
                 options: [
                     "개발 완료 후 테스팅 시작",
@@ -790,9 +1215,11 @@
                     "상세한 문서 작성 필수"
                 ],
                 correct: 2,
-                explanation: "애자일에서는 각 스프린트/이터레이션마다 지속적으로 테스팅하고 빠른 피드백을 제공합니다."
+                explanation: "애자일에서는 각 스프린트/이터레이션마다 지속적으로 테스팅하고 빠른 피드백을 제공합니다.",
+                category: "lifecycle"
             },
             {
+                id: 19,
                 question: "테스트 자동화가 가장 효과적인 테스트 유형은?",
                 options: [
                     "탐색적 테스팅",
@@ -801,9 +1228,11 @@
                     "인수 테스팅"
                 ],
                 correct: 2,
-                explanation: "회귀 테스팅은 반복적으로 수행되므로 자동화의 ROI가 가장 높습니다."
+                explanation: "회귀 테스팅은 반복적으로 수행되므로 자동화의 ROI가 가장 높습니다.",
+                category: "management"
             },
             {
+                id: 20,
                 question: "결함 우선순위와 심각도의 관계는?",
                 options: [
                     "항상 일치한다",
@@ -812,7 +1241,73 @@
                     "우선순위가 심각도를 결정한다"
                 ],
                 correct: 2,
-                explanation: "심각도는 기술적 영향, 우선순위는 비즈니스 중요도를 반영하므로 독립적으로 결정될 수 있습니다."
+                explanation: "심각도는 기술적 영향, 우선순위는 비즈니스 중요도를 반영하므로 독립적으로 결정될 수 있습니다.",
+                category: "management"
+            },
+            {
+                id: 21,
+                question: "테스트 피라미드의 구조를 올바르게 설명한 것은?",
+                options: [
+                    "상단: 단위 테스트(많음), 하단: E2E 테스트(적음)",
+                    "하단: 단위 테스트(많음), 상단: E2E 테스트(적음)",
+                    "모든 레벨에 동일한 수의 테스트",
+                    "중간: 단위 테스트, 양끝: 통합 테스트"
+                ],
+                correct: 1,
+                explanation: "테스트 피라미드는 하단에 많은 단위 테스트, 중간에 통합 테스트, 상단에 적은 E2E 테스트 구조입니다.",
+                category: "management"
+            },
+            {
+                id: 22,
+                question: "테스트 오라클(Test Oracle)이란?",
+                options: [
+                    "테스트 자동화 도구",
+                    "테스트 실행 결과가 올바른지 판단하기 위한 정보의 소스",
+                    "테스트 데이터베이스",
+                    "테스트 관리 시스템"
+                ],
+                correct: 1,
+                explanation: "테스트 오라클은 테스트 결과의 올바름을 판단하기 위한 기준이나 정보의 소스입니다.",
+                category: "foundation"
+            },
+            {
+                id: 23,
+                question: "정적 테스팅과 동적 테스팅의 차이는?",
+                options: [
+                    "정적: 자동화 불가능, 동적: 자동화 가능",
+                    "정적: 코드 실행 안함, 동적: 코드 실행함",
+                    "정적: 개발자만 수행, 동적: 테스터만 수행",
+                    "정적: 결함 발견 불가, 동적: 결함 발견 가능"
+                ],
+                correct: 1,
+                explanation: "정적 테스팅은 코드를 실행하지 않고 수행하며, 동적 테스팅은 코드를 실행하면서 수행합니다.",
+                category: "static"
+            },
+            {
+                id: 24,
+                question: "통합 테스팅의 주요 목적은?",
+                options: [
+                    "개별 컴포넌트의 기능 확인",
+                    "컴포넌트 간 인터페이스와 상호작용 테스트",
+                    "전체 시스템의 성능 테스트",
+                    "사용자 요구사항 확인"
+                ],
+                correct: 1,
+                explanation: "통합 테스팅은 통합된 컴포넌트 간의 인터페이스와 상호작용을 중점적으로 테스트합니다.",
+                category: "lifecycle"
+            },
+            {
+                id: 25,
+                question: "테스트 커버리지(Test Coverage)란?",
+                options: [
+                    "테스트 케이스의 총 개수",
+                    "테스트가 특정 커버리지 항목을 실행한 정도",
+                    "테스트 실행 시간",
+                    "발견된 결함의 수"
+                ],
+                correct: 1,
+                explanation: "테스트 커버리지는 테스트가 코드나 요구사항 등 특정 항목을 얼마나 커버했는지를 백분율로 표현합니다.",
+                category: "technique"
             }
         ];
 
@@ -822,12 +1317,58 @@
         let score = 0;
         let answeredQuestions = [];
         let currentFilter = 'all';
+        let quizMode = 'all';
+        let flashcardMode = 'all';
+        let bookmarkedTerms = new Set();
+        let bookmarkedQuestions = new Set();
+        let incorrectQuestions = new Set();
+
+        // LocalStorage 키
+        const STORAGE_KEYS = {
+            BOOKMARKED_TERMS: 'istqb_bookmarked_terms',
+            BOOKMARKED_QUESTIONS: 'istqb_bookmarked_questions',
+            INCORRECT_QUESTIONS: 'istqb_incorrect_questions',
+            ANSWERED_HISTORY: 'istqb_answered_history',
+            STATS: 'istqb_stats'
+        };
 
         // 초기화
         document.addEventListener('DOMContentLoaded', function() {
+            loadFromStorage();
             displayTerms('all');
             loadFlashcard();
+            updateStats();
+            updateReviewBadge();
         });
+
+        // LocalStorage에서 데이터 로드
+        function loadFromStorage() {
+            try {
+                const savedBookmarkedTerms = localStorage.getItem(STORAGE_KEYS.BOOKMARKED_TERMS);
+                const savedBookmarkedQuestions = localStorage.getItem(STORAGE_KEYS.BOOKMARKED_QUESTIONS);
+                const savedIncorrectQuestions = localStorage.getItem(STORAGE_KEYS.INCORRECT_QUESTIONS);
+                const savedAnsweredHistory = localStorage.getItem(STORAGE_KEYS.ANSWERED_HISTORY);
+                
+                if (savedBookmarkedTerms) bookmarkedTerms = new Set(JSON.parse(savedBookmarkedTerms));
+                if (savedBookmarkedQuestions) bookmarkedQuestions = new Set(JSON.parse(savedBookmarkedQuestions));
+                if (savedIncorrectQuestions) incorrectQuestions = new Set(JSON.parse(savedIncorrectQuestions));
+                if (savedAnsweredHistory) answeredQuestions = JSON.parse(savedAnsweredHistory);
+            } catch (e) {
+                console.error('Failed to load from storage:', e);
+            }
+        }
+
+        // LocalStorage에 데이터 저장
+        function saveToStorage() {
+            try {
+                localStorage.setItem(STORAGE_KEYS.BOOKMARKED_TERMS, JSON.stringify(Array.from(bookmarkedTerms)));
+                localStorage.setItem(STORAGE_KEYS.BOOKMARKED_QUESTIONS, JSON.stringify(Array.from(bookmarkedQuestions)));
+                localStorage.setItem(STORAGE_KEYS.INCORRECT_QUESTIONS, JSON.stringify(Array.from(incorrectQuestions)));
+                localStorage.setItem(STORAGE_KEYS.ANSWERED_HISTORY, JSON.stringify(answeredQuestions));
+            } catch (e) {
+                console.error('Failed to save to storage:', e);
+            }
+        }
 
         // 섹션 전환
         function showSection(sectionName) {
@@ -839,9 +1380,13 @@
             event.target.classList.add('active');
             document.getElementById(sectionName).classList.add('active');
             
-            // 모의고사 섹션이면 문제 로드
+            // 각 섹션별 초기화
             if (sectionName === 'quiz') {
                 startQuiz();
+            } else if (sectionName === 'review') {
+                displayReviewItems();
+            } else if (sectionName === 'stats') {
+                displayStats();
             }
         }
 
@@ -858,14 +1403,27 @@
             const container = document.getElementById('terms-container');
             container.innerHTML = '';
             
-            const filteredTerms = category === 'all' 
-                ? terms 
-                : terms.filter(t => t.category === category);
+            let filteredTerms = terms;
             
-            filteredTerms.forEach(term => {
+            if (category === 'bookmarked') {
+                filteredTerms = terms.filter((t, index) => bookmarkedTerms.has(index));
+            } else if (category !== 'all') {
+                filteredTerms = terms.filter(t => t.category === category);
+            }
+            
+            filteredTerms.forEach((term, originalIndex) => {
+                const actualIndex = terms.indexOf(term);
                 const termCard = document.createElement('div');
                 termCard.className = 'term-card';
+                if (bookmarkedTerms.has(actualIndex)) {
+                    termCard.classList.add('bookmarked');
+                }
+                
                 termCard.innerHTML = `
+                    <button class="bookmark-btn ${bookmarkedTerms.has(actualIndex) ? 'active' : ''}" 
+                            onclick="toggleTermBookmark(${actualIndex})">
+                        ${bookmarkedTerms.has(actualIndex) ? '⭐' : '☆'}
+                    </button>
                     <div class="term-title">${term.term}</div>
                     <div class="term-definition">${term.definition}</div>
                     ${term.details ? `<div class="term-definition" style="font-size: 14px; color: #7f8c8d; margin-top: 10px;">💡 ${term.details}</div>` : ''}
@@ -876,6 +1434,17 @@
                 `;
                 container.appendChild(termCard);
             });
+        }
+
+        // 용어 북마크 토글
+        function toggleTermBookmark(index) {
+            if (bookmarkedTerms.has(index)) {
+                bookmarkedTerms.delete(index);
+            } else {
+                bookmarkedTerms.add(index);
+            }
+            saveToStorage();
+            displayTerms(currentFilter);
         }
 
         // 카테고리 이름 변환
@@ -890,31 +1459,76 @@
             return names[category] || category;
         }
 
+        // 모의고사 모드 설정
+        function setQuizMode(mode) {
+            quizMode = mode;
+            document.querySelectorAll('.study-mode-selector .mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            startQuiz();
+        }
+
         // 모의고사 시작
         function startQuiz() {
             currentQuestionIndex = 0;
             score = 0;
-            answeredQuestions = [];
-            shuffleArray(quizQuestions);
+            
+            // 모드에 따라 문제 필터링
+            let filteredQuestions = [...quizQuestions];
+            
+            if (quizMode === 'incorrect') {
+                filteredQuestions = quizQuestions.filter(q => incorrectQuestions.has(q.id));
+                if (filteredQuestions.length === 0) {
+                    document.getElementById('quiz-container').innerHTML = `
+                        <div style="text-align: center; padding: 50px;">
+                            <h3>아직 틀린 문제가 없습니다!</h3>
+                            <p>먼저 전체 문제를 풀어보세요.</p>
+                            <button class="btn btn-primary" onclick="setQuizMode('all')">전체 문제 풀기</button>
+                        </div>
+                    `;
+                    return;
+                }
+            } else if (quizMode === 'bookmarked') {
+                filteredQuestions = quizQuestions.filter(q => bookmarkedQuestions.has(q.id));
+                if (filteredQuestions.length === 0) {
+                    document.getElementById('quiz-container').innerHTML = `
+                        <div style="text-align: center; padding: 50px;">
+                            <h3>북마크한 문제가 없습니다!</h3>
+                            <p>문제를 풀면서 북마크를 추가해보세요.</p>
+                            <button class="btn btn-primary" onclick="setQuizMode('all')">전체 문제 풀기</button>
+                        </div>
+                    `;
+                    return;
+                }
+            }
+            
+            shuffleArray(filteredQuestions);
+            window.currentQuizQuestions = filteredQuestions;
             loadQuestion();
         }
 
         // 문제 로드
         function loadQuestion() {
-            if (currentQuestionIndex >= quizQuestions.length) {
+            const questions = window.currentQuizQuestions || quizQuestions;
+            
+            if (currentQuestionIndex >= questions.length) {
                 showQuizResult();
                 return;
             }
             
-            const question = quizQuestions[currentQuestionIndex];
+            const question = questions[currentQuestionIndex];
             const container = document.getElementById('quiz-container');
             
             // 진도 업데이트
-            const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
             document.getElementById('quiz-progress').style.width = progress + '%';
             
             container.innerHTML = `
-                <div class="question-number">문제 ${currentQuestionIndex + 1} / ${quizQuestions.length}</div>
+                <div class="question-number">
+                    문제 ${currentQuestionIndex + 1} / ${questions.length}
+                    ${bookmarkedQuestions.has(question.id) ? '⭐' : ''}
+                </div>
                 <div class="question">${question.question}</div>
                 <div class="options">
                     ${question.options.map((option, index) => `
@@ -926,11 +1540,25 @@
                 </div>
                 <div id="explanation" style="display: none;"></div>
                 <div class="quiz-controls">
+                    <button class="btn btn-warning" onclick="bookmarkQuestion(${question.id})">
+                        ${bookmarkedQuestions.has(question.id) ? '⭐ 북마크 해제' : '☆ 북마크'}
+                    </button>
                     <button class="btn btn-secondary" onclick="skipQuestion()" id="skip-btn">건너뛰기</button>
                     <button class="btn btn-primary" onclick="submitAnswer()" id="submit-btn">답안 제출</button>
                     <button class="btn btn-success" onclick="nextQuestion()" id="next-btn" style="display: none;">다음 문제</button>
                 </div>
             `;
+        }
+
+        // 문제 북마크
+        function bookmarkQuestion(questionId) {
+            if (bookmarkedQuestions.has(questionId)) {
+                bookmarkedQuestions.delete(questionId);
+            } else {
+                bookmarkedQuestions.add(questionId);
+            }
+            saveToStorage();
+            loadQuestion(); // 화면 새로고침
         }
 
         // 옵션 선택
@@ -949,7 +1577,8 @@
             }
             
             const selectedIndex = parseInt(selected.value);
-            const question = quizQuestions[currentQuestionIndex];
+            const questions = window.currentQuizQuestions || quizQuestions;
+            const question = questions[currentQuestionIndex];
             const isCorrect = selectedIndex === question.correct;
             
             // 정답/오답 표시
@@ -962,6 +1591,13 @@
                 }
             });
             
+            // 오답 기록
+            if (!isCorrect) {
+                incorrectQuestions.add(question.id);
+            } else {
+                incorrectQuestions.delete(question.id);
+            }
+            
             // 설명 표시
             const explanationDiv = document.getElementById('explanation');
             explanationDiv.className = 'explanation';
@@ -969,13 +1605,27 @@
             explanationDiv.innerHTML = `
                 <h4>${isCorrect ? '✅ 정답입니다!' : '❌ 틀렸습니다.'}</h4>
                 <p>${question.explanation}</p>
+                <p style="margin-top: 10px; font-size: 14px; color: #7f8c8d;">
+                    카테고리: ${getCategoryName(question.category)}
+                </p>
             `;
             
             if (isCorrect) score++;
+            
+            // 답변 기록 저장
             answeredQuestions.push({
+                questionId: question.id,
                 question: question.question,
-                correct: isCorrect
+                userAnswer: selectedIndex,
+                correctAnswer: question.correct,
+                correct: isCorrect,
+                category: question.category,
+                timestamp: new Date().toISOString()
             });
+            
+            saveToStorage();
+            updateStats();
+            updateReviewBadge();
             
             // 버튼 상태 변경
             document.getElementById('submit-btn').style.display = 'none';
@@ -985,10 +1635,14 @@
 
         // 문제 건너뛰기
         function skipQuestion() {
+            const questions = window.currentQuizQuestions || quizQuestions;
             answeredQuestions.push({
-                question: quizQuestions[currentQuestionIndex].question,
+                questionId: questions[currentQuestionIndex].id,
+                question: questions[currentQuestionIndex].question,
                 correct: false,
-                skipped: true
+                skipped: true,
+                category: questions[currentQuestionIndex].category,
+                timestamp: new Date().toISOString()
             });
             currentQuestionIndex++;
             loadQuestion();
@@ -1002,26 +1656,56 @@
 
         // 결과 표시
         function showQuizResult() {
+            const questions = window.currentQuizQuestions || quizQuestions;
             const container = document.getElementById('quiz-container');
-            const percentage = Math.round((score / quizQuestions.length) * 100);
+            const percentage = Math.round((score / questions.length) * 100);
             
             container.innerHTML = `
                 <div class="score-display">
                     <h2>🎉 테스트 완료!</h2>
-                    <h2>${score} / ${quizQuestions.length}</h2>
+                    <h2>${score} / ${questions.length}</h2>
                     <p>정답률: ${percentage}%</p>
                     <p>${percentage >= 70 ? '합격 기준을 통과했습니다!' : '더 연습이 필요합니다.'}</p>
                     <button class="btn btn-primary" onclick="startQuiz()" style="margin-top: 20px;">다시 시작</button>
+                    <button class="btn btn-secondary" onclick="showSection('review')" style="margin-top: 20px;">오답 확인</button>
                 </div>
             `;
         }
 
-        // 플래시카드 관련 함수
+        // 플래시카드 모드 설정
+        function setFlashcardMode(mode) {
+            flashcardMode = mode;
+            document.querySelectorAll('#flashcard .mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            currentCardIndex = 0;
+            loadFlashcard();
+        }
+
+        // 플래시카드 로드
         function loadFlashcard() {
-            const term = terms[currentCardIndex];
+            let filteredTerms = terms;
+            
+            if (flashcardMode === 'important') {
+                filteredTerms = terms.filter(t => t.importance === '필수암기');
+            } else if (flashcardMode === 'bookmarked') {
+                filteredTerms = terms.filter((t, index) => bookmarkedTerms.has(index));
+            }
+            
+            if (filteredTerms.length === 0) {
+                document.getElementById('flashcard-term').textContent = '표시할 카드가 없습니다';
+                document.getElementById('flashcard-definition').textContent = '다른 모드를 선택해주세요';
+                return;
+            }
+            
+            window.currentFlashcards = filteredTerms;
+            const term = filteredTerms[currentCardIndex];
+            
             document.getElementById('flashcard-term').textContent = term.term;
             document.getElementById('flashcard-definition').textContent = term.definition;
-            document.getElementById('card-counter').textContent = `${currentCardIndex + 1} / ${terms.length}`;
+            document.getElementById('card-importance').textContent = term.importance;
+            document.getElementById('card-counter').textContent = `${currentCardIndex + 1} / ${filteredTerms.length}`;
             
             // 카드 앞면 표시
             document.getElementById('card-front').style.display = 'block';
@@ -1042,13 +1726,240 @@
         }
 
         function nextCard() {
-            currentCardIndex = (currentCardIndex + 1) % terms.length;
+            const cards = window.currentFlashcards || terms;
+            currentCardIndex = (currentCardIndex + 1) % cards.length;
             loadFlashcard();
         }
 
         function previousCard() {
-            currentCardIndex = currentCardIndex === 0 ? terms.length - 1 : currentCardIndex - 1;
+            const cards = window.currentFlashcards || terms;
+            currentCardIndex = currentCardIndex === 0 ? cards.length - 1 : currentCardIndex - 1;
             loadFlashcard();
+        }
+
+        function bookmarkCard() {
+            const cards = window.currentFlashcards || terms;
+            const currentTerm = cards[currentCardIndex];
+            const originalIndex = terms.indexOf(currentTerm);
+            
+            if (bookmarkedTerms.has(originalIndex)) {
+                bookmarkedTerms.delete(originalIndex);
+            } else {
+                bookmarkedTerms.add(originalIndex);
+            }
+            
+            saveToStorage();
+            event.target.textContent = bookmarkedTerms.has(originalIndex) ? '⭐ 북마크 해제' : '☆ 북마크';
+        }
+
+        // 오답노트 표시
+        function displayReviewItems() {
+            const container = document.getElementById('review-container');
+            container.innerHTML = '';
+            
+            // 최근 답변 기록과 JSON 데이터 통합
+            const recentAnswers = answeredQuestions.slice(-20).reverse();
+            
+            if (recentAnswers.length === 0 && reviewData["오답노트"].length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 50px;">
+                        <h3>아직 학습 기록이 없습니다!</h3>
+                        <p>모의고사를 풀면 여기에 기록이 나타납니다.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 최근 학습 기록 표시
+            if (recentAnswers.length > 0) {
+                const recentSection = document.createElement('div');
+                recentSection.innerHTML = '<h3 style="margin-bottom: 20px;">📝 최근 학습 기록</h3>';
+                
+                recentAnswers.forEach(answer => {
+                    if (answer.skipped) return;
+                    
+                    const question = quizQuestions.find(q => q.id === answer.questionId);
+                    if (!question) return;
+                    
+                    const reviewItem = document.createElement('div');
+                    reviewItem.className = `review-item ${answer.correct ? 'correct' : 'incorrect'}`;
+                    
+                    reviewItem.innerHTML = `
+                        <div class="review-header">
+                            <div class="review-status">
+                                <span class="review-tag ${answer.correct ? 'tag-correct' : 'tag-incorrect'}">
+                                    ${answer.correct ? '정답' : '오답'}
+                                </span>
+                                <span class="review-tag tag-category">${getCategoryName(question.category)}</span>
+                            </div>
+                            <button class="btn btn-warning" style="padding: 5px 15px; font-size: 12px;" 
+                                    onclick="bookmarkQuestion(${question.id})">
+                                ${bookmarkedQuestions.has(question.id) ? '⭐' : '☆'}
+                            </button>
+                        </div>
+                        <div class="review-question">${question.question}</div>
+                        <div class="review-options">
+                            ${question.options.map((option, index) => `
+                                <div class="review-option ${index === answer.userAnswer ? 'user-selected' : ''} 
+                                            ${index === question.correct ? 'correct-answer' : ''}">
+                                    ${option}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="review-explanation">
+                            <h4>💡 해설</h4>
+                            <p>${question.explanation}</p>
+                        </div>
+                    `;
+                    
+                    recentSection.appendChild(reviewItem);
+                });
+                
+                container.appendChild(recentSection);
+            }
+            
+            // 오답노트 JSON 데이터 표시
+            if (reviewData["오답노트"].length > 0) {
+                const noteSection = document.createElement('div');
+                noteSection.innerHTML = '<h3 style="margin: 30px 0 20px;">📚 핵심 오답노트</h3>';
+                
+                reviewData["오답노트"].forEach(item => {
+                    const reviewItem = document.createElement('div');
+                    reviewItem.className = 'review-item';
+                    reviewItem.style.borderLeft = '5px solid #3498db';
+                    
+                    reviewItem.innerHTML = `
+                        <div class="review-header">
+                            <div class="review-status">
+                                <span class="review-tag tag-category">${item.카테고리}</span>
+                            </div>
+                        </div>
+                        <div class="review-question">${item.문제}</div>
+                        <div class="review-explanation">
+                            <h4>✅ 정답</h4>
+                            <p>${item.답변}</p>
+                        </div>
+                    `;
+                    
+                    noteSection.appendChild(reviewItem);
+                });
+                
+                container.appendChild(noteSection);
+            }
+        }
+
+        // 리뷰 필터링
+        function filterReview(filter) {
+            document.querySelectorAll('.review-filters .filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // 필터링 로직 구현 (추후 확장 가능)
+            displayReviewItems();
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            const totalAnswered = answeredQuestions.filter(a => !a.skipped).length;
+            const correctAnswers = answeredQuestions.filter(a => a.correct).length;
+            const correctRate = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
+            
+            document.getElementById('total-solved').textContent = totalAnswered;
+            document.getElementById('correct-rate').textContent = correctRate + '%';
+            
+            // 연속 학습일 계산 (간단한 구현)
+            const today = new Date().toDateString();
+            const lastStudy = localStorage.getItem('last_study_date');
+            let streak = parseInt(localStorage.getItem('study_streak') || '0');
+            
+            if (lastStudy !== today) {
+                streak = lastStudy === new Date(Date.now() - 86400000).toDateString() ? streak + 1 : 1;
+                localStorage.setItem('study_streak', streak.toString());
+                localStorage.setItem('last_study_date', today);
+            }
+            
+            document.getElementById('study-streak').textContent = streak + '일';
+        }
+
+        // 리뷰 배지 업데이트
+        function updateReviewBadge() {
+            const incorrectCount = incorrectQuestions.size;
+            const badge = document.getElementById('review-badge');
+            
+            if (incorrectCount > 0) {
+                badge.textContent = incorrectCount;
+                badge.style.display = 'inline-block';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // 통계 표시
+        function displayStats() {
+            const totalAnswered = answeredQuestions.filter(a => !a.skipped).length;
+            const correctAnswers = answeredQuestions.filter(a => a.correct).length;
+            const correctRate = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
+            
+            document.getElementById('stat-total').textContent = totalAnswered;
+            document.getElementById('stat-correct').textContent = correctRate + '%';
+            
+            // 카테고리별 통계 계산
+            const categoryStats = {};
+            answeredQuestions.forEach(answer => {
+                if (!answer.skipped && answer.category) {
+                    if (!categoryStats[answer.category]) {
+                        categoryStats[answer.category] = { total: 0, correct: 0 };
+                    }
+                    categoryStats[answer.category].total++;
+                    if (answer.correct) {
+                        categoryStats[answer.category].correct++;
+                    }
+                }
+            });
+            
+            // 취약/강점 영역 찾기
+            let weakestCategory = '-';
+            let strongestCategory = '-';
+            let lowestRate = 100;
+            let highestRate = 0;
+            
+            Object.entries(categoryStats).forEach(([category, stats]) => {
+                const rate = (stats.correct / stats.total) * 100;
+                if (rate < lowestRate) {
+                    lowestRate = rate;
+                    weakestCategory = getCategoryName(category);
+                }
+                if (rate > highestRate) {
+                    highestRate = rate;
+                    strongestCategory = getCategoryName(category);
+                }
+            });
+            
+            document.getElementById('stat-weak').textContent = weakestCategory;
+            document.getElementById('stat-strong').textContent = strongestCategory;
+            
+            // 카테고리별 상세 통계 표시
+            const categoryStatsContainer = document.getElementById('category-stats');
+            categoryStatsContainer.innerHTML = '';
+            
+            Object.entries(categoryStats).forEach(([category, stats]) => {
+                const rate = Math.round((stats.correct / stats.total) * 100);
+                const statItem = document.createElement('div');
+                statItem.style.marginBottom = '15px';
+                
+                statItem.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <span>${getCategoryName(category)}</span>
+                        <span>${stats.correct}/${stats.total} (${rate}%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${rate}%; background: ${rate >= 70 ? '#27ae60' : rate >= 50 ? '#f39c12' : '#e74c3c'};"></div>
+                    </div>
+                `;
+                
+                categoryStatsContainer.appendChild(statItem);
+            });
         }
 
         // 배열 섞기 함수
