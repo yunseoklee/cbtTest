@@ -198,7 +198,10 @@
             font-size: 18px;
             color: #2c3e50;
             margin-bottom: 25px;
-            line-height: 1.6;
+            line-height: 1.8;
+            white-space: pre-wrap !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
         }
 
         .question-number {
@@ -225,6 +228,7 @@
             transition: all 0.3s;
             display: flex;
             align-items: center;
+            line-height: 1.6;
         }
 
         .option:hover {
@@ -682,6 +686,7 @@
                     <button class="filter-btn" onclick="filterReview('incorrect')">오답만</button>
                     <button class="filter-btn" onclick="filterReview('correct')">정답</button>
                     <button class="filter-btn" onclick="filterReview('bookmarked')">북마크</button>
+                    <button class="filter-btn" onclick="filterReview('core')">📚 핵심</button>
                 </div>
                 
                 <div id="review-container">
@@ -723,37 +728,118 @@
     </div>
 
     <script>
-        // 오답노트 데이터 (외부 JSON에서 로드)
+        // 오답노트 데이터 (HTML 내장)
         let reviewData = {
-            "오답노트": []
-        };
-        
-        // JSON 파일에서 오답노트 로드
-        async function loadReviewNotes() {
-            try {
-                const response = await fetch('https://raw.githubusercontent.com/yunseoklee/cbtTest/main/review-notes.json');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && data.오답노트 && Array.isArray(data.오답노트)) {
-                        reviewData = data;
-                        console.log(`✅ ${reviewData.오답노트.length}개의 오답노트 로드 완료`);
-                        // 오답노트 탭이 활성화되어 있으면 다시 표시
-                        if (document.getElementById('review') && document.getElementById('review').classList.contains('active')) {
-                            displayReviewItems();
-                        }
-                    }
-                } else {
-                    console.log('📝 review-notes.json 파일이 없습니다. 빈 오답노트로 시작합니다.');
+        "lastUpdated": "2025-10-28",
+        "version": "1.0",
+        "오답노트": [
+                {
+                        "문제": "회귀 테스팅을 수행하는 가장 중요한 이유는?",
+                        "답변": "변경사항이 기존 기능에 영향을 주지 않았는지 확인",
+                        "카테고리": "테스트 레벨"
+                },
+                {
+                        "문제": "테스트 레벨의 순서로 올바른 것은?",
+                        "답변": "단위 테스팅 → 통합 테스팅 → 시스템 테스팅 → 인수 테스팅",
+                        "카테고리": "테스트 레벨"
+                },
+                {
+                        "문제": "V모델에서 단위 테스팅과 대응되는 개발 활동은?",
+                        "답변": "상세 설계",
+                        "카테고리": "테스트 레벨"
+                },
+                {
+                        "문제": "시프트 레프트(Shift-Left) 접근법의 주요 이점은?",
+                        "답변": "결함을 조기에 발견하여 수정 비용 절감",
+                        "카테고리": "테스트 원칙"
+                },
+                {
+                        "문제": "오류(Error), 결함(Defect), 장애(Failure)의 관계로 올바른 것은?",
+                        "답변": "오류가 결함을 만들고, 결함이 장애를 일으킬 수 있다",
+                        "카테고리": "테스트 기초"
+                },
+                {
+                        "문제": "동등 분할(Equivalence Partitioning) 기법의 목적은?",
+                        "답변": "입력 도메인을 동일하게 처리될 것으로 예상되는 그룹으로 나누어 대표값을 테스트",
+                        "카테고리": "테스트 기법"
+                },
+                {
+                        "문제": "경계값 분석(Boundary Value Analysis)에서 2-포인트 기법을 적용할 때 테스트하는 값은?",
+                        "답변": "유효 범위의 최솟값과 최댓값",
+                        "카테고리": "테스트 기법"
+                },
+                {
+                        "문제": "100% 구문 커버리지(Statement Coverage)를 달성했다는 의미는?",
+                        "답변": "모든 실행 가능한 코드 라인이 최소 한 번 실행되었음",
+                        "카테고리": "테스트 기법"
+                },
+                {
+                        "문제": "결정 테이블 테스팅이 가장 유용한 상황은?",
+                        "답변": "복잡한 비즈니스 규칙과 여러 조건의 조합을 테스트할 때",
+                        "카테고리": "테스트 기법"
+                },
+                {
+                        "문제": "탐색적 테스팅의 특징은?",
+                        "답변": "학습, 테스트 설계, 테스트 실행을 동시에 수행",
+                        "카테고리": "테스트 기법"
+                },
+                {
+                        "문제": "정적 테스팅과 동적 테스팅의 차이는?",
+                        "답변": "정적: 코드를 실행하지 않고 수행, 동적: 코드를 실행하며 수행",
+                        "카테고리": "정적 테스팅"
+                },
+                {
+                        "문제": "가장 공식적인 리뷰 유형은?",
+                        "답변": "인스펙션(Inspection) - 역할 정의, 체크리스트 사용, 메트릭 수집",
+                        "카테고리": "정적 테스팅"
+                },
+                {
+                        "문제": "리스크 기반 테스팅의 주요 목적은?",
+                        "답변": "제품 리스크가 높은 영역에 테스트 노력을 집중",
+                        "카테고리": "테스트 관리"
+                },
+                {
+                        "문제": "테스트 종료 조건(Exit Criteria)의 예시가 아닌 것은?",
+                        "답변": "테스트 환경 준비 완료 (이것은 진입 조건)",
+                        "카테고리": "테스트 관리"
+                },
+                {
+                        "문제": "애자일 개발에서 테스팅의 특징은?",
+                        "답변": "각 스프린트마다 지속적 테스팅과 빠른 피드백",
+                        "카테고리": "개발 방법론"
+                },
+                {
+                        "문제": "테스트 자동화가 가장 효과적인 테스트 유형은?",
+                        "답변": "회귀 테스팅 (반복 실행으로 ROI 높음)",
+                        "카테고리": "테스트 자동화"
+                },
+                {
+                        "문제": "검증(Verification)과 확인(Validation)의 차이는?",
+                        "답변": "검증: 제품을 올바르게 만드는가, 확인: 올바른 제품을 만드는가",
+                        "카테고리": "테스트 기초"
+                },
+                {
+                        "문제": "결함 우선순위와 심각도의 관계는?",
+                        "답변": "독립적으로 결정 가능 (심각도: 기술적 영향, 우선순위: 비즈니스 중요도)",
+                        "카테고리": "결함 관리"
+                },
+                {
+                        "문제": "테스트 피라미드의 구조는?",
+                        "답변": "하단에 단위 테스트(많음), 중간에 통합 테스트, 상단에 E2E 테스트(적음)",
+                        "카테고리": "테스트 전략"
+                },
+                {
+                        "문제": "테스트 오라클(Test Oracle)이란?",
+                        "답변": "테스트 실행 결과가 올바른지 판단하기 위한 정보의 소스",
+                        "카테고리": "테스트 기초"
                 }
-            } catch (error) {
-                console.log('📝 오답노트 파일을 찾을 수 없습니다. 빈 오답노트로 시작합니다.');
-            }
-        }
+        ]
+};
         
-        // 페이지 로드 시 GitHub에서 JSON 파일들 로드
-        window.addEventListener('DOMContentLoaded', async () => {
-            await loadQuizQuestions();
-            await loadReviewNotes();
+        // 페이지 로드 시 데이터 초기화
+        window.addEventListener('DOMContentLoaded', () => {
+            loadQuizQuestions();
+            console.log(`✅ ${reviewData.오답노트.length}개의 오답노트 로드 완료`);
             loadFromStorage();
         });
 
@@ -991,38 +1077,432 @@
         ];
 
         // 모의고사 문제 데이터 (외부 JSON에서 로드)
-        // 모의고사 문제 데이터 (외부 JSON에서 로드)
+        // 모의고사 문제 데이터 (HTML 내장)
+        const QUESTIONS_RAW_DATA = [
+        {
+                "id": "A4",
+                "chapter": "1.4.1",
+                "k_level": "K2",
+                "question": "다음 중 테스트 설계 활동은?",
+                "options": [
+                        "a. 테스트 노력을 추정한다",
+                        "b. 테스트 케이스를 설계한다",
+                        "c. 커버리지 아이템을 도출한다",
+                        "d. 결함을 보고한다"
+                ],
+                "correct_answer": "c",
+                "explanation": "테스트 설계 활동은 테스트 컨디션(테스트 대상)을 커버하는 테스트 케이스를 설계하고, 이 테스트 케이스가 커버할 항목(커버리지 아이템)을 도출하는 활동을 포함합니다. 테스트 노력을 추정하는 것은 테스트 계획, 결함 보고는 테스트 실행 중의 활동입니다. (FL-1.4.1 K2)"
+        },
+        {
+                "id": "A5",
+                "chapter": "1.4.3",
+                "k_level": "K2",
+                "question": "다음 중 테스트 실행 활동에 포함되지 않는 것은?",
+                "options": [
+                        "a. 테스트 스위트를 빌드한다",
+                        "b. 테스트 로그를 생성한다",
+                        "c. 결함 보고서를 기록한다",
+                        "d. 기대 결과를 결정한다"
+                ],
+                "correct_answer": "d",
+                "explanation": "테스트 실행 활동은 테스트 로그 생성, 결과 비교, 결함 보고서 기록을 포함합니다. **기대 결과(Expected Result)를 결정**하는 것은 **테스트 설계** 활동의 일부입니다. (FL-1.4.3 K2)"
+        },
+        {
+                "id": "A6",
+                "chapter": "1.5.1",
+                "k_level": "K2",
+                "question": "개발자와 테스터 간의 효과적인 협업을 위해 필요한 테스터의 소프트 스킬은? i. 비즈니스 언어 이해 ii. 제품 비전 수립 능력 iii. 공감 능력 iv. 좋은 팀 구성원 되기",
+                "options": [
+                        "a. i, ii, iii",
+                        "b. i, iii, iv",
+                        "c. ii, iii, iv",
+                        "d. i, ii, iv"
+                ],
+                "correct_answer": "b",
+                "explanation": "테스터는 효과적인 협업을 위해 공감, 비즈니스 언어 이해, 그리고 좋은 팀 구성원으로서의 역량(i, iii, iv)을 갖추어야 합니다. **제품 비전 수립** 능력(ii)은 주로 제품 소유자나 비즈니스 분석가의 역할입니다. (FL-1.5.1 K2)"
+        },
+        {
+                "id": "A10",
+                "chapter": "2.1.3",
+                "k_level": "K2",
+                "question": "다음 중 테스트 주도 개발(TDD)을 가장 잘 설명한 것은?",
+                "options": [
+                        "a. 인수 조건을 given/when/then 형식으로 작성한다",
+                        "b. 인수 조건을 기반으로 테스트를 작성한다",
+                        "c. 코드를 작성하기 전에 테스트를 작성한다",
+                        "d. 개발과 테스팅을 분리한다"
+                ],
+                "correct_answer": "c",
+                "explanation": "테스트 주도 개발(TDD)은 실제 코드를 구현하기 **전에** 실패하는(Red) 테스트를 먼저 작성하고, 그 테스트를 통과시키는 코드(Green)를 작성한 후, 코드를 리팩토링(Refactor)하는 프로세스입니다. (FL-2.1.3 K2)"
+        },
+        {
+                "id": "A12",
+                "chapter": "2.2.1",
+                "k_level": "K2",
+                "question": "다음 중 컴포넌트 테스팅의 테스트 베이시스는?",
+                "options": [
+                        "a. 사용자 스토리",
+                        "b. 시스템 요구사항 명세서",
+                        "c. 상세 설계 명세서",
+                        "d. 운영 설명서"
+                ],
+                "correct_answer": "c",
+                "explanation": "컴포넌트 테스팅(단위 테스팅)은 가장 낮은 레벨의 테스팅으로, 테스트 베이시스로는 주로 **상세 설계 명세서**나 컴포넌트 사양, 또는 코드 자체가 사용됩니다. 사용자 스토리나 시스템 요구사항은 시스템/인수 테스팅의 베이시스입니다. (FL-2.2.1 K2)"
+        },
+        {
+                "id": "A14",
+                "chapter": "2.2.4",
+                "k_level": "K2",
+                "question": "다음 중 인수 테스팅의 일반적인 목표는?",
+                "options": [
+                        "a. 시스템이 비즈니스 요구사항을 충족한다는 신뢰를 구축한다",
+                        "b. 시스템의 구조적 무결성을 평가한다",
+                        "c. 시스템의 통합 문제를 발견한다",
+                        "d. 시스템의 성능을 최적화한다"
+                ],
+                "correct_answer": "a",
+                "explanation": "인수 테스팅(Acceptance Testing)은 시스템이 사용자나 **비즈니스 요구사항**을 충족하는지 최종적으로 확인하고 신뢰를 구축하는 데 중점을 둡니다. (FL-2.2.4 K2)"
+        },
+        {
+                "id": "A15",
+                "chapter": "2.3.1",
+                "k_level": "K2",
+                "question": "다음 중 기능 테스팅의 예시가 아닌 것은?",
+                "options": [
+                        "a. 사용자 스토리 테스팅",
+                        "b. 비즈니스 시나리오 테스팅",
+                        "c. 보안 테스팅",
+                        "d. 상호 운용성 테스팅"
+                ],
+                "correct_answer": "d",
+                "explanation": "기능 테스팅은 시스템이 무엇을 '하는지'를 테스트합니다. 사용자 스토리(a)와 비즈니스 시나리오(b)는 기능 테스팅입니다. 보안 테스팅(c)과 **상호 운용성 테스팅(d)**은 시스템이 어떻게 작동하는지와 관련된 **비기능 테스팅**입니다. (FL-2.3.1 K2)"
+        },
+        {
+                "id": "A16",
+                "chapter": "2.4.1",
+                "k_level": "K2",
+                "question": "다음 중 확인 테스팅(Confirmation Testing)의 목적은?",
+                "options": [
+                        "a. 변경으로 인해 의도하지 않은 결함이 발생하지 않았는지 확인한다",
+                        "b. 수정된 결함이 원래의 결함을 성공적으로 제거했는지 확인한다",
+                        "c. 새로운 기능이 올바르게 구현되었는지 확인한다",
+                        "d. 고위험 영역에 집중하여 테스트 노력을 최소화한다"
+                ],
+                "correct_answer": "b",
+                "explanation": "확인 테스팅은 **수정된 결함이 원래의 결함을 성공적으로 제거했는지** 확인하는 활동입니다. 변경으로 인한 부작용 확인(a)은 리그레션 테스팅의 목적입니다. (FL-2.4.1 K2)"
+        },
+        {
+                "id": "A17",
+                "chapter": "3.1.2",
+                "k_level": "K2",
+                "question": "정적 테스팅의 이점으로 가장 적절하지 않은 것은?",
+                "options": [
+                        "a. 결함을 조기에 발견한다",
+                        "b. 테스트 환경이 준비되지 않아도 수행할 수 있다",
+                        "c. 코드 실행 없이 테스트 베이시스 결함을 식별한다",
+                        "d. 런타임 오류의 성능 영향을 정확하게 평가한다"
+                ],
+                "correct_answer": "d",
+                "explanation": "정적 테스팅은 **코드 실행 없이** 문서나 코드를 검토하는 활동이므로, 런타임 오류나 성능 영향과 같은 **동적** 품질 특성을 평가할 수는 없습니다. (FL-3.1.2 K2)"
+        },
+        {
+                "id": "A18",
+                "chapter": "3.2.1",
+                "k_level": "K1",
+                "question": "리뷰의 네 가지 주요 활동의 올바른 순서는? i. 개별 준비 ii. 시작 iii. 수정 및 보고 iv. 커뮤니케이션 및 분석",
+                "options": [
+                        "a. ii → i → iv → iii",
+                        "b. i → ii → iv → iii",
+                        "c. i → iv → ii → iii",
+                        "d. ii → iv → i → iii"
+                ],
+                "correct_answer": "a",
+                "explanation": "리뷰 프로세스의 네 가지 주요 활동은 **시작(ii)** → **개별 준비(i)** → **커뮤니케이션 및 분석(iv)** → **수정 및 보고(iii)** 순서로 진행됩니다. (FL-3.2.1 K1)"
+        },
+        {
+                "id": "A20",
+                "chapter": "4.2.1",
+                "k_level": "K3",
+                "question": "1에서 10까지의 점수를 입력해야 하는 명세에 대해 **동등 분할**을 적용했을 때, 최소한의 테스트 케이스 입력값은?",
+                "options": [
+                        "a. 3개",
+                        "b. 4개",
+                        "c. 5개",
+                        "d. 6개"
+                ],
+                "correct_answer": "a",
+                "explanation": "유효 범위는 [1, 10]입니다. 동등 분할은 다음 세 가지 동등 클래스를 식별합니다: 1. **유효** 동등 클래스: [1, 10] (예: 5) 2. **비유효** 동등 클래스: <1 (예: 0) 3. **비유효** 동등 클래스: >10 (예: 11). 각 클래스에서 최소 1개의 입력값이 필요하므로 총 **3개**의 테스트 케이스가 필요합니다. (FL-4.2.1 K3)"
+        },
+        {
+                "id": "A21",
+                "chapter": "4.2.2",
+                "k_level": "K3",
+                "question": "주어진 코드: `if (점수 >= 50) { if (점수 <= 100) { 결과 = '합격'; } }` 경계값 분석을 적용하여 테스트 케이스를 설계할 때, 테스트해야 할 **유효한** 경계값은?",
+                "options": [
+                        "a. 49, 101",
+                        "b. 50, 100",
+                        "c. 50, 51, 99, 100",
+                        "d. 49, 50, 100, 101"
+                ],
+                "correct_answer": "b",
+                "explanation": "유효 범위는 50과 100 사이([50, 100])입니다. **유효한** 경계값은 범위에 포함되는 경계 자체의 값입니다. 따라서 **50과 100**이 유효 경계값입니다. (FL-4.2.2 K3)"
+        },
+        {
+                "id": "A22",
+                "chapter": "4.2.3",
+                "k_level": "K3",
+                "question": "명세: (C1) '고객은 이메일을 입력한다' AND (C2) '이메일이 유효하다' 일 때, (A1) '성공 메시지를 표시한다'. 그 외 모든 경우 (A2) '오류 메시지를 표시한다'. 결정 테이블 기법을 적용했을 때, 최소한으로 필요한 테스트 케이스의 수는?",
+                "options": [
+                        "a. 2개",
+                        "b. 3개",
+                        "c. 4개",
+                        "d. 5개"
+                ],
+                "correct_answer": "c",
+                "explanation": "조건이 C1과 C2, 총 2개이므로, 가능한 모든 조건의 조합은 $2^2=4$ 개입니다 (T/T, T/F, F/T, F/F). 결정 테이블은 이 4가지 규칙을 모두 포함해야 하므로 최소 **4개**의 테스트 케이스가 필요합니다. (FL-4.2.3 K3)"
+        },
+        {
+                "id": "A24",
+                "chapter": "4.3.1",
+                "k_level": "K3",
+                "question": "다음 코드에 대해 **분기 커버리지** 100%를 달성하기 위한 최소한의 테스트 케이스 입력(x, y)은? `if (x > 0) { if (y > 0) { print('A'); } else { print('B'); } } else { print('C'); }`",
+                "options": [
+                        "a. 1개",
+                        "b. 2개",
+                        "c. 3개",
+                        "d. 4개"
+                ],
+                "correct_answer": "c",
+                "explanation": "분기 커버리지 100%는 모든 분기(조건)의 참/거짓 결과가 최소 한 번씩 실행되어야 합니다. \n\n1.  **첫 번째 분기 (x > 0)**: 참 (예: x=1, y=1) → 내부 if로 진입\n2.  **두 번째 분기 (y > 0)**: 참 (x=1, y=1) → 'A' 실행\n3.  **두 번째 분기 (y > 0)**: 거짓 (예: x=1, y=0) → 'B' 실행\n4.  **첫 번째 분기 (x > 0)**: 거짓 (예: x=0, y=0) → 'C' 실행\n\n이 중 1과 2는 같은 입력(x=1, y=1)으로 충족되므로, 최소 **3개**의 독립적인 테스트 케이스 (x>0 & y>0, x>0 & y≤0, x≤0)가 필요합니다. (FL-4.3.1 K3)"
+        },
+        {
+                "id": "A25",
+                "chapter": "4.4.1",
+                "k_level": "K2",
+                "question": "탐색적 테스팅에 대한 설명으로 가장 적절한 것은?",
+                "options": [
+                        "a. 문서화된 절차를 기반으로 한다",
+                        "b. 테스트 케이스를 미리 설계한다",
+                        "c. 테스터의 경험을 기반으로 테스트를 설계하고 실행한다",
+                        "d. 주로 자동화된 테스트에 사용된다"
+                ],
+                "correct_answer": "c",
+                "explanation": "탐색적 테스팅(Exploratory Testing)은 테스터의 **경험**과 **학습**을 기반으로 테스트 케이스 설계와 실행을 동시에 진행하는 비공식적이고 경험 기반의 테스팅 기법입니다. (FL-4.4.1 K2)"
+        },
+        {
+                "id": "A27",
+                "chapter": "5.1.2",
+                "k_level": "K2",
+                "question": "테스트 계획의 주요 목적은?",
+                "options": [
+                        "a. 테스트 환경 설정",
+                        "b. 테스트 팀 구성",
+                        "c. 결함 재현",
+                        "d. 테스트 활동의 범위, 목표, 접근 방식을 정의"
+                ],
+                "correct_answer": "d",
+                "explanation": "테스트 계획은 테스트 활동의 **범위, 목표, 접근 방식**을 정의하여 테스트 노력을 안내하고, 이해관계자가 테스트 프로세스를 이해하도록 지원하는 데 중점을 둡니다. (FL-5.1.2 K2)"
+        },
+        {
+                "id": "A28",
+                "chapter": "5.1.3",
+                "k_level": "K2",
+                "question": "테스트 계획에 영향을 미치는 요인 두 가지는? i. 테스트 정책 ii. 테스트 추정 iii. 테스트 팀의 기술 iv. 시스템의 복잡도",
+                "options": [
+                        "a. i, iv",
+                        "b. ii, iii",
+                        "c. i, iii",
+                        "d. ii, iv"
+                ],
+                "correct_answer": "a",
+                "explanation": "테스트 정책(조직의 테스팅 지침)과 시스템의 복잡도(테스트 대상의 특성)는 테스트 활동의 **접근 방식과 노력**에 큰 영향을 미치므로 테스트 계획에 중대한 영향을 미치는 요인입니다. (FL-5.1.3 K2)"
+        },
+        {
+                "id": "A29",
+                "chapter": "5.1.4",
+                "k_level": "K3",
+                "question": "테스트 추정 기법 중 **플래닝 포커(Planning Poker)**에 대한 설명으로 가장 적절한 것은?",
+                "options": [
+                        "a. 전문가의 경험을 기반으로 한다",
+                        "b. 테스트 노력을 계산하는 공식을 사용한다",
+                        "c. 팀원들의 합의를 도출하는 구조화된 방식이다",
+                        "d. 이전 프로젝트의 데이터를 기반으로 한다"
+                ],
+                "correct_answer": "c",
+                "explanation": "플래닝 포커는 와이드밴드 델파이 기법의 변형으로, 팀원들의 **합의**를 통해 추정치를 도출하는 **구조화된** 접근 방식입니다. (FL-5.1.4 K3)"
+        },
+        {
+                "id": "A30",
+                "chapter": "5.2.2",
+                "k_level": "K2",
+                "question": "다음 중 **제품 리스크**의 예시는?",
+                "options": [
+                        "a. 테스트 환경 준비 지연",
+                        "b. 시스템이 요구사항을 충족하지 못할 가능성",
+                        "c. 인력 부족",
+                        "d. 예산 초과"
+                ],
+                "correct_answer": "b",
+                "explanation": "**제품 리스크**는 소프트웨어의 **품질**이나 기능이 요구사항을 충족하지 못할 가능성과 관련됩니다. 테스트 환경 지연, 인력 부족, 예산 초과는 **프로젝트 리스크**에 해당합니다. (FL-5.2.2 K2)"
+        },
+        {
+                "id": "A31",
+                "chapter": "5.3.1",
+                "k_level": "K2",
+                "question": "테스트 모니터링 활동의 주요 목적은?",
+                "options": [
+                        "a. 이해관계자에게 테스트 활동에 대한 가시성을 제공한다",
+                        "b. 테스트 케이스를 설계하고 구현한다",
+                        "c. 테스트 리포트를 작성한다",
+                        "d. 결함을 수정한다"
+                ],
+                "correct_answer": "a",
+                "explanation": "테스트 모니터링은 테스트 활동의 진행 상황과 상태를 추적하고, 이해관계자에게 **가시성을 제공**하여 올바른 의사결정을 지원하는 데 중점을 둡니다. (FL-5.3.1 K2)"
+        },
+        {
+                "id": "A32",
+                "chapter": "5.3.3",
+                "k_level": "K2",
+                "question": "다음 중 테스트 제어 조치에 대한 설명으로 가장 적절한 것은?",
+                "options": [
+                        "a. 테스트 진행 상황을 추적하고 보고한다",
+                        "b. 계획과 실제 사이의 편차를 줄이기 위해 필요한 조치를 취한다",
+                        "c. 결함 보고서의 품질을 높인다",
+                        "d. 테스트 케이스의 커버리지를 계산한다"
+                ],
+                "correct_answer": "b",
+                "explanation": "테스트 제어(Control)는 모니터링 결과를 바탕으로 **계획과의 편차를 줄이기 위해** 필요한 조치(예: 테스트 일정 조정, 자원 재할당)를 취하는 활동입니다. (FL-5.3.3 K2)"
+        },
+        {
+                "id": "A33",
+                "chapter": "5.4.1",
+                "k_level": "K2",
+                "question": "결함 보고서의 주요 목적은?",
+                "options": [
+                        "a. 결함의 근본 원인을 설명한다",
+                        "b. 결함의 심각도를 변경한다",
+                        "c. 테스트 관리자에게 승인을 요청한다",
+                        "d. 개발자가 결함을 재현하고 수정할 수 있도록 정보를 제공한다"
+                ],
+                "correct_answer": "d",
+                "explanation": "결함 보고서의 주된 목적은 개발자가 결함을 **재현하고, 이해하고, 수정**하는 데 필요한 충분한 정보를 제공하는 것입니다. (FL-5.4.1 K2)"
+        },
+        {
+                "id": "A34",
+                "chapter": "5.4.1",
+                "k_level": "K2",
+                "question": "다음 중 결함 보고서의 필수적인 구성 요소가 아닌 것은?",
+                "options": [
+                        "a. 결함의 상태",
+                        "b. 결함이 발견된 환경",
+                        "c. 예상 수정 시간",
+                        "d. 재현 단계"
+                ],
+                "correct_answer": "c",
+                "explanation": "결함 보고서의 필수 구성 요소는 식별자, 제목, 상태, 재현 단계, 예상 결과, 실제 결과, 환경 등이며, **예상 수정 시간**은 일반적으로 프로젝트 관리나 개발 팀의 추정 정보이며 필수 구성 요소는 아닙니다. (FL-5.4.1 K2)"
+        },
+        {
+                "id": "A35",
+                "chapter": "5.5.1",
+                "k_level": "K2",
+                "question": "다음 중 테스트 완료 활동에서 수행하는 작업이 아닌 것은?",
+                "options": [
+                        "a. 테스트 자산(테스트웨어)을 보관한다",
+                        "b. 테스트 요약 보고서를 작성한다",
+                        "c. 테스트 실행을 승인한다",
+                        "d. 교훈(Lessons Learned)을 수집한다"
+                ],
+                "correct_answer": "c",
+                "explanation": "테스트 완료 활동은 보고서 작성(b), 테스트웨어 보관(a), 교훈 수집(d)을 포함합니다. **테스트 실행을 승인**하는 것은 테스트 완료 기준 충족 후 테스트 **프로젝트의 종료**를 선언하는 활동에 더 가깝습니다. (FL-5.5.1 K2)"
+        },
+        {
+                "id": "A36",
+                "chapter": "6.1.1",
+                "k_level": "K2",
+                "question": "다음 중 테스트 도구 사용의 주요 이점은?",
+                "options": [
+                        "a. 모든 테스트를 자동화할 수 있다",
+                        "b. 테스트 케이스 설계 시간을 단축한다",
+                        "c. 자동화된 테스트가 수동 테스트보다 항상 더 많은 결함을 발견한다",
+                        "d. 반복적인 작업을 더 효율적이고 일관되게 수행한다"
+                ],
+                "correct_answer": "d",
+                "explanation": "테스트 도구 사용의 주요 이점은 **반복적이고 지루한 작업**을 수동으로 하는 것보다 훨씬 **효율적이고 일관성** 있게 수행하는 데 있습니다. (FL-6.1.1 K2)"
+        },
+        {
+                "id": "A37",
+                "chapter": "6.1.2",
+                "k_level": "K2",
+                "question": "다음 중 테스트 관리 도구의 일반적인 기능은?",
+                "options": [
+                        "a. 테스트 케이스 및 테스트 스위트 관리",
+                        "b. 코드 커버리지 측정",
+                        "c. 성능 부하 생성",
+                        "d. 요구사항 분석"
+                ],
+                "correct_answer": "a",
+                "explanation": "테스트 관리 도구는 테스트 케이스, 테스트 스위트, 테스트 실행 결과, 요구사항 추적성, 결함 등을 **관리**하는 데 사용됩니다. 코드 커버리지 측정은 정적/동적 분석 도구, 성능 부하 생성은 성능 테스트 도구의 기능입니다. (FL-6.1.2 K2)"
+        },
+        {
+                "id": "A38",
+                "chapter": "6.2.1",
+                "k_level": "K2",
+                "question": "테스트 자동화 도구를 선택하고 사용할 때의 잠재적인 리스크는?",
+                "options": [
+                        "a. 도구가 더 많은 결함을 발견하지 못할 가능성",
+                        "b. 도구의 유지보수 비용이 너무 높을 가능성",
+                        "c. 도구가 모든 테스트 활동을 대체할 것이라는 믿음",
+                        "d. 테스트 환경 설정에 너무 많은 시간이 소요될 가능성"
+                ],
+                "correct_answer": "b",
+                "explanation": "테스트 자동화의 주요 리스크 중 하나는 자동화된 테스트 스크립트를 변경 및 유지보수하는 데 필요한 **비용과 노력**이 예상보다 높을 수 있다는 것입니다. (FL-6.2.1 K2)"
+        },
+        {
+                "id": "A39",
+                "chapter": "6.2.1",
+                "k_level": "K1",
+                "question": "테스트 도구를 성공적으로 도입하고 사용하기 위한 지침이 아닌 것은?",
+                "options": [
+                        "a. 현실적인 기대치를 설정한다",
+                        "b. 도입 비용과 리스크를 평가한다",
+                        "c. 도구의 선택에 최종 사용자를 참여시킨다",
+                        "d. 도구 도입에 대한 적절한 교육 및 코칭이 필요함을 인지한다"
+                ],
+                "correct_answer": "c",
+                "explanation": "테스트 도구의 선택 및 도입 지침은 **현실적인 기대치 설정**, 비용/리스크 평가, 교육 필요성 인지 등을 강조합니다. **최종 사용자**는 일반적으로 테스트 도구의 주 사용자가 아니므로, 도구 선택에 참여하는 핵심 이해관계자는 테스터, 개발자, 관리자 등입니다. (FL-6.2.1 K1)"
+        },
+        {
+                "id": "A40",
+                "chapter": "6.2.1",
+                "k_level": "K2",
+                "question": "다음 중 테스트 자동화 도구 도입 시 고려해야 할 **비용 항목**은?",
+                "options": [
+                        "a. 초기 구매 및 구현 비용",
+                        "b. 테스트 케이스 설계 비용",
+                        "c. 테스트 환경 설정 비용",
+                        "d. 결함 보고서 작성 비용"
+                ],
+                "correct_answer": "a",
+                "explanation": "테스트 도구 도입에 드는 비용은 **초기 구매 및 구현(설치, 환경 적응) 비용**, 유지보수 및 훈련 비용을 포함합니다. (FL-6.2.1 K2)"
+        }
+];
+        
         let quizQuestions = [];
         
-        // JSON 파일에서 모의고사 문제 로드
-        async function loadQuizQuestions() {
-            try {
-                const response = await fetch('https://raw.githubusercontent.com/yunseoklee/cbtTest/main/questions.json');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (Array.isArray(data) && data.length > 0) {
-                        // JSON 형식을 내부 형식으로 변환
-                        quizQuestions = data.map((q, index) => ({
-                            id: index + 1,
-                            question: q.question,
-                            options: q.options,
-                            correct: q.options.findIndex(opt => opt.startsWith(q.correct_answer)),
-                            explanation: q.explanation,
-                            chapter: q.chapter,
-                            k_level: q.k_level,
-                            category: 'istqb'
-                        }));
-                        console.log(`✅ ${quizQuestions.length}개의 모의고사 문제 로드 완료`);
-                        // 모의고사 탭이 활성화되어 있으면 다시 표시
-                        if (document.getElementById('quiz') && document.getElementById('quiz').classList.contains('active')) {
-                            startQuiz();
-                        }
-                    }
-                } else {
-                    console.log('📝 questions.json 파일이 없습니다. 빈 문제로 시작합니다.');
-                }
-            } catch (error) {
-                console.log('📝 모의고사 문제 파일을 찾을 수 없습니다. 빈 문제로 시작합니다.');
+        // 내장 데이터로 모의고사 문제 초기화
+        function loadQuizQuestions() {
+            if (QUESTIONS_RAW_DATA && Array.isArray(QUESTIONS_RAW_DATA) && QUESTIONS_RAW_DATA.length > 0) {
+                quizQuestions = QUESTIONS_RAW_DATA.map((q, index) => ({
+                    id: index + 1,
+                    question: q.question,
+                    options: q.options,
+                    correct: q.options.findIndex(opt => opt.startsWith(q.correct_answer)),
+                    explanation: q.explanation,
+                    chapter: q.chapter,
+                    k_level: q.k_level,
+                    category: 'istqb'
+                }));
+                console.log(`✅ ${quizQuestions.length}개의 모의고사 문제 로드 완료`);
             }
         }
 
@@ -1035,6 +1515,7 @@
         let currentFilter = 'all';
         let quizMode = 'all';
         let flashcardMode = 'all';
+        let reviewFilter = 'all';
         let bookmarkedTerms = new Set();
         let bookmarkedQuestions = new Set();
         let incorrectQuestions = new Set();
@@ -1473,8 +1954,69 @@
             const container = document.getElementById('review-container');
             container.innerHTML = '';
             
-            // 최근 답변 기록과 JSON 데이터 통합
-            const recentAnswers = answeredQuestions.slice(-20).reverse();
+            // "핵심" 필터일 때는 핵심 오답노트만 표시
+            if (reviewFilter === 'core') {
+                if (reviewData["오답노트"].length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 50px;">
+                            <h3>핵심 오답노트가 없습니다!</h3>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const noteSection = document.createElement('div');
+                noteSection.innerHTML = '<h3 style="margin-bottom: 20px;">📚 핵심 오답노트</h3>';
+                
+                reviewData["오답노트"].forEach(item => {
+                    const reviewItem = document.createElement('div');
+                    reviewItem.className = 'review-item';
+                    reviewItem.style.borderLeft = '5px solid #3498db';
+                    
+                    reviewItem.innerHTML = `
+                        <div class="review-header">
+                            <div class="review-status">
+                                <span class="review-tag tag-category">${item.카테고리}</span>
+                            </div>
+                        </div>
+                        <div class="review-question">${item.문제}</div>
+                        <div class="review-explanation">
+                            <h4>✅ 정답</h4>
+                            <p>${item.답변}</p>
+                        </div>
+                    `;
+                    
+                    noteSection.appendChild(reviewItem);
+                });
+                
+                container.appendChild(noteSection);
+                return;
+            }
+            
+            // 최근 답변 기록 필터링
+            let recentAnswers = answeredQuestions.slice(-20).reverse();
+            
+            // 필터 적용
+            if (reviewFilter === 'incorrect') {
+                recentAnswers = recentAnswers.filter(a => !a.correct && !a.skipped);
+            } else if (reviewFilter === 'correct') {
+                recentAnswers = recentAnswers.filter(a => a.correct && !a.skipped);
+            } else if (reviewFilter === 'bookmarked') {
+                recentAnswers = recentAnswers.filter(a => {
+                    const q = quizQuestions.find(qq => qq.id === a.questionId);
+                    return q && bookmarkedQuestions.has(q.id);
+                });
+            }
+            
+            if (recentAnswers.length === 0 && reviewFilter !== 'all') {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 50px;">
+                        <h3>해당하는 학습 기록이 없습니다!</h3>
+                        <p>모의고사를 풀면 여기에 기록이 나타납니다.</p>
+                    </div>
+                `;
+                return;
+            }
             
             if (recentAnswers.length === 0 && reviewData["오답노트"].length === 0) {
                 container.innerHTML = `
@@ -1534,8 +2076,8 @@
                 container.appendChild(recentSection);
             }
             
-            // 오답노트 JSON 데이터 표시
-            if (reviewData["오답노트"].length > 0) {
+            // 오답노트 JSON 데이터 표시 (필터: 전체일 때만)
+            if (reviewData["오답노트"].length > 0 && reviewFilter === 'all') {
                 const noteSection = document.createElement('div');
                 noteSection.innerHTML = '<h3 style="margin: 30px 0 20px;">📚 핵심 오답노트</h3>';
                 
@@ -1566,12 +2108,12 @@
 
         // 리뷰 필터링
         function filterReview(filter) {
+            reviewFilter = filter;
             document.querySelectorAll('.review-filters .filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // 필터링 로직 구현 (추후 확장 가능)
             displayReviewItems();
         }
 
