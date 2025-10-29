@@ -606,38 +606,18 @@
         </div>
 
         <div class="tabs">
-            <button class="tab active" onclick="showSection('terms')">📚 핵심 용어</button>
-            <button class="tab" onclick="showSection('quiz')">📝 모의고사</button>
-            <button class="tab" onclick="showSection('flashcard')">🔄 플래시카드</button>
+            <button class="tab active" onclick="showSection('quiz')">📝 모의고사</button>
             <button class="tab" onclick="showSection('review')">
                 📊 오답노트
                 <span class="badge" id="review-badge" style="display: none;">0</span>
             </button>
+            <button class="tab" onclick="showSection('key-review')">📚 핵심 오답노트</button>
             <button class="tab" onclick="showSection('stats')">📈 통계</button>
         </div>
 
         <div class="content">
-            <!-- 핵심 용어 섹션 -->
-            <div id="terms" class="section active">
-                <h2 style="margin-bottom: 20px;">핵심 용어 학습</h2>
-                
-                <div class="filter-buttons">
-                    <button class="filter-btn active" onclick="filterTerms('all')">전체</button>
-                    <button class="filter-btn" onclick="filterTerms('foundation')">테스팅 기초</button>
-                    <button class="filter-btn" onclick="filterTerms('lifecycle')">생명주기</button>
-                    <button class="filter-btn" onclick="filterTerms('static')">정적 테스팅</button>
-                    <button class="filter-btn" onclick="filterTerms('technique')">테스트 기법</button>
-                    <button class="filter-btn" onclick="filterTerms('management')">테스트 관리</button>
-                    <button class="filter-btn" onclick="filterTerms('bookmarked')">⭐ 북마크</button>
-                </div>
-
-                <div id="terms-container">
-                    <div class="loading">데이터를 불러오는 중...</div>
-                </div>
-            </div>
-
             <!-- 모의고사 섹션 -->
-            <div id="quiz" class="section">
+            <div id="quiz" class="section active">
                 <h2 style="margin-bottom: 20px;">CBT 모의고사</h2>
                 
                 <div class="study-mode-selector">
@@ -656,39 +636,10 @@
                 </div>
             </div>
 
-            <!-- 플래시카드 섹션 -->
-            <div id="flashcard" class="section">
-                <h2 style="margin-bottom: 20px;">플래시카드 학습</h2>
-                
-                <div class="study-mode-selector">
-                    <button class="mode-btn active" onclick="setFlashcardMode('all')">전체</button>
-                    <button class="mode-btn" onclick="setFlashcardMode('important')">필수암기만</button>
-                    <button class="mode-btn" onclick="setFlashcardMode('bookmarked')">북마크</button>
-                </div>
-                
-                <div id="flashcard-container" style="text-align: center;">
-                    <div class="flashcard" onclick="flipCard()">
-                        <div class="difficulty-indicator" id="card-importance"></div>
-                        <div id="card-front">
-                            <h3 id="flashcard-term" style="font-size: 32px;"></h3>
-                            <p style="margin-top: 20px; opacity: 0.9;">클릭하여 정의 보기</p>
-                        </div>
-                        <div id="card-back" style="display: none;">
-                            <p id="flashcard-definition" style="font-size: 20px; line-height: 1.8;"></p>
-                        </div>
-                    </div>
-                    <div style="margin-top: 20px;">
-                        <button class="btn btn-secondary" onclick="previousCard()">⬅ 이전</button>
-                        <span style="margin: 0 20px;" id="card-counter">1 / 10</span>
-                        <button class="btn btn-warning" onclick="bookmarkCard()">⭐ 북마크</button>
-                        <button class="btn btn-primary" onclick="nextCard()">다음 ➡</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 오답노트 섹션 -->
+            <!-- 오답노트 섹션 (내가 푼 문제) -->
             <div id="review" class="section">
                 <h2 style="margin-bottom: 20px;">오답노트 & 복습</h2>
+                <p style="margin-bottom: 20px; color: #666;">내가 푼 문제의 오답 기록입니다.</p>
                 
                 <div class="review-filters">
                     <button class="filter-btn active" onclick="filterReview('all')">전체</button>
@@ -698,6 +649,16 @@
                 </div>
                 
                 <div id="review-container">
+                    <div class="loading">데이터를 불러오는 중...</div>
+                </div>
+            </div>
+
+            <!-- 핵심 오답노트 섹션 (JSON 데이터) -->
+            <div id="key-review" class="section">
+                <h2 style="margin-bottom: 20px;">📚 핵심 오답노트</h2>
+                <p style="margin-bottom: 20px; color: #666;">자주 틀리는 중요한 개념들을 정리한 오답노트입니다.</p>
+                
+                <div id="key-review-container">
                     <div class="loading">데이터를 불러오는 중...</div>
                 </div>
             </div>
@@ -741,25 +702,19 @@
         const REVIEW_NOTES_URL = 'https://raw.githubusercontent.com/yunseoklee/cbtTest/main/review-notes.json';
 
         // 전역 변수
-        let terms = [];
         let quizQuestions = [];
         let reviewData = { "오답노트": [] };
         let currentQuestionIndex = 0;
-        let currentCardIndex = 0;
         let score = 0;
         let answeredQuestions = [];
-        let currentFilter = 'all';
         let currentReviewFilter = 'all';
         let quizMode = 'all';
-        let flashcardMode = 'all';
-        let bookmarkedTerms = new Set();
         let bookmarkedQuestions = new Set();
         let incorrectQuestions = new Set();
         let dataLoaded = false;
 
         // LocalStorage 키
         const STORAGE_KEYS = {
-            BOOKMARKED_TERMS: 'istqb_bookmarked_terms',
             BOOKMARKED_QUESTIONS: 'istqb_bookmarked_questions',
             INCORRECT_QUESTIONS: 'istqb_incorrect_questions',
             ANSWERED_HISTORY: 'istqb_answered_history',
@@ -770,7 +725,7 @@
         document.addEventListener('DOMContentLoaded', async function() {
             loadFromStorage();
             await loadData();
-            displayTerms('all');
+            startQuiz(); // 첫 화면으로 모의고사 표시
             updateStats();
             updateReviewBadge();
         });
@@ -799,239 +754,6 @@
                 const reviewResponse = await fetch(REVIEW_NOTES_URL);
                 reviewData = await reviewResponse.json();
 
-                // 용어 데이터 (기존 하드코딩된 데이터 사용)
-                terms = [
-                    {
-                        term: "테스팅 (Testing)",
-                        definition: "소프트웨어 제품과 관련 작업 산출물이 명시된 요구사항을 만족하는지 결정하고, 목적에 부합함을 입증하며, 결함을 발견하기 위한 활동",
-                        importance: "필수암기",
-                        category: "foundation",
-                        details: "정적/동적 활동 모두 포함, 계획/분석/설계/구현/실행/완료 활동 포함"
-                    },
-                    {
-                        term: "테스트 케이스 (Test Case)",
-                        definition: "사전조건, 입력값, 행동(해야 할 일), 기대 결과, 사후조건의 집합으로 특정 테스트 목적이나 테스트 조건을 위해 개발됨",
-                        importance: "필수암기",
-                        category: "foundation"
-                    },
-                    {
-                        term: "결함 (Defect/Bug/Fault)",
-                        definition: "작업 산출물의 불완전함이나 결점으로 인해 작업 산출물이 요구사항이나 명세를 충족시키지 못하는 것",
-                        importance: "필수암기",
-                        category: "foundation"
-                    },
-                    {
-                        term: "오류 (Error)",
-                        definition: "부정확한 결과를 만들어내는 인간의 행위",
-                        importance: "필수암기",
-                        category: "foundation"
-                    },
-                    {
-                        term: "장애 (Failure)",
-                        definition: "컴포넌트나 시스템이 요구되거나 기대된 기능을 명시된 제한 범위 내에서 수행하지 못하는 이벤트",
-                        importance: "필수암기",
-                        category: "foundation"
-                    },
-                    {
-                        term: "검증 (Verification)",
-                        definition: "작업 산출물이 해당 작업 산출물에 대한 요구사항을 제대로 반영하는지 확인 (제품을 올바르게 만들고 있는가?)",
-                        importance: "필수암기",
-                        category: "foundation"
-                    },
-                    {
-                        term: "확인 (Validation)",
-                        definition: "작업 산출물이 의도한 사용 목적을 충족하는지 확인 (올바른 제품을 만들고 있는가?)",
-                        importance: "필수암기",
-                        category: "foundation"
-                    },
-                    {
-                        term: "테스트 레벨 (Test Level)",
-                        definition: "테스트할 대상과 연관된 특정 책임을 가진 테스트 활동 그룹 (단위/통합/시스템/인수 테스팅)",
-                        importance: "필수암기",
-                        category: "lifecycle"
-                    },
-                    {
-                        term: "단위 테스팅 (Unit Testing)",
-                        definition: "개별 소프트웨어 컴포넌트를 테스트하는 테스트 레벨",
-                        importance: "필수암기",
-                        category: "lifecycle"
-                    },
-                    {
-                        term: "통합 테스팅 (Integration Testing)",
-                        definition: "통합된 컴포넌트나 시스템 간 인터페이스와 상호작용을 테스트하는 테스트 레벨",
-                        importance: "필수암기",
-                        category: "lifecycle"
-                    },
-                    {
-                        term: "시스템 테스팅 (System Testing)",
-                        definition: "완전하고 통합된 시스템이 명시된 요구사항을 만족하는지 테스트하는 레벨",
-                        importance: "필수암기",
-                        category: "lifecycle"
-                    },
-                    {
-                        term: "인수 테스팅 (Acceptance Testing)",
-                        definition: "시스템이 사용자 요구와 비즈니스 프로세스를 충족하는지 확인하는 테스트 레벨",
-                        importance: "필수암기",
-                        category: "lifecycle"
-                    },
-                    {
-                        term: "회귀 테스팅 (Regression Testing)",
-                        definition: "변경으로 인해 이전에 작동하던 소프트웨어에 결함이 생기지 않았는지 확인하는 테스팅",
-                        importance: "필수암기",
-                        category: "lifecycle"
-                    },
-                    {
-                        term: "정적 테스팅 (Static Testing)",
-                        definition: "소프트웨어를 실행하지 않고 수행하는 테스팅 (리뷰, 정적 분석)",
-                        importance: "필수암기",
-                        category: "static"
-                    },
-                    {
-                        term: "동적 테스팅 (Dynamic Testing)",
-                        definition: "소프트웨어를 실행하면서 수행하는 테스팅",
-                        importance: "필수암기",
-                        category: "static"
-                    },
-                    {
-                        term: "리뷰 (Review)",
-                        definition: "작업 산출물을 조사하여 결함을 발견하고 품질을 평가하는 정적 테스팅 활동",
-                        importance: "중요",
-                        category: "static"
-                    },
-                    {
-                        term: "워크스루 (Walkthrough)",
-                        definition: "저자가 주도하는 비공식적 리뷰 유형",
-                        importance: "중요",
-                        category: "static"
-                    },
-                    {
-                        term: "인스펙션 (Inspection)",
-                        definition: "역할이 정의되고 측정 기준을 수집하는 가장 공식적인 리뷰 유형",
-                        importance: "중요",
-                        category: "static"
-                    },
-                    {
-                        term: "동등 분할 (Equivalence Partitioning)",
-                        definition: "입력 도메인을 동일하게 처리될 것으로 예상되는 그룹으로 나누는 블랙박스 테스트 기법",
-                        importance: "필수암기",
-                        category: "technique"
-                    },
-                    {
-                        term: "경계값 분석 (Boundary Value Analysis)",
-                        definition: "분할의 경계값을 테스트 입력값으로 사용하는 블랙박스 테스트 기법",
-                        importance: "필수암기",
-                        category: "technique"
-                    },
-                    {
-                        term: "결정 테이블 테스팅 (Decision Table Testing)",
-                        definition: "조건의 조합과 그에 따른 동작을 테이블로 표현하는 블랙박스 테스트 기법",
-                        importance: "중요",
-                        category: "technique"
-                    },
-                    {
-                        term: "상태 전이 테스팅 (State Transition Testing)",
-                        definition: "시스템의 상태 변화를 테스트하는 블랙박스 테스트 기법",
-                        importance: "중요",
-                        category: "technique"
-                    },
-                    {
-                        term: "구문 테스팅 (Statement Testing)",
-                        definition: "모든 실행 가능한 구문을 테스트하는 화이트박스 테스트 기법",
-                        importance: "필수암기",
-                        category: "technique"
-                    },
-                    {
-                        term: "결정 테스팅 (Decision Testing)",
-                        definition: "모든 결정의 참/거짓 결과를 테스트하는 화이트박스 테스트 기법",
-                        importance: "필수암기",
-                        category: "technique"
-                    },
-                    {
-                        term: "경험 기반 테스팅 (Experience-Based Testing)",
-                        definition: "테스터의 지식과 경험을 활용하는 테스트 접근법 (오류 추정, 탐색적 테스팅, 체크리스트 기반)",
-                        importance: "중요",
-                        category: "technique"
-                    },
-                    {
-                        term: "탐색적 테스팅 (Exploratory Testing)",
-                        definition: "테스트 설계, 실행, 평가를 동시에 수행하는 테스팅 접근법",
-                        importance: "중요",
-                        category: "technique"
-                    },
-                    {
-                        term: "테스트 계획 (Test Plan)",
-                        definition: "테스트 목적, 범위, 접근법, 자원, 일정 등을 기술한 문서",
-                        importance: "필수암기",
-                        category: "management"
-                    },
-                    {
-                        term: "리스크 기반 테스팅 (Risk-Based Testing)",
-                        definition: "제품 리스크를 기반으로 테스트를 우선순위화하고 집중하는 접근법",
-                        importance: "중요",
-                        category: "management"
-                    },
-                    {
-                        term: "테스트 모니터링 (Test Monitoring)",
-                        definition: "테스트 진행 상황을 계획과 비교하여 추적하는 활동",
-                        importance: "중요",
-                        category: "management"
-                    },
-                    {
-                        term: "테스트 제어 (Test Control)",
-                        definition: "테스트 목적 달성을 위해 필요한 시정 조치를 취하는 활동",
-                        importance: "중요",
-                        category: "management"
-                    },
-                    {
-                        term: "진입 조건 (Entry Criteria)",
-                        definition: "테스트 활동을 시작하기 위한 전제 조건",
-                        importance: "중요",
-                        category: "management"
-                    },
-                    {
-                        term: "종료 조건 (Exit Criteria)",
-                        definition: "테스트 활동을 완료하기 위한 조건",
-                        importance: "중요",
-                        category: "management"
-                    },
-                    {
-                        term: "테스트 추정 (Test Estimation)",
-                        definition: "테스트에 필요한 자원과 시간을 예측하는 활동",
-                        importance: "중요",
-                        category: "management"
-                    },
-                    {
-                        term: "결함 관리 (Defect Management)",
-                        definition: "결함을 인지, 기록, 분류, 조사, 해결, 처리하는 프로세스",
-                        importance: "필수암기",
-                        category: "management"
-                    },
-                    {
-                        term: "테스트 커버리지 (Test Coverage)",
-                        definition: "테스트가 특정 커버리지 항목을 실행한 정도 (백분율로 표현)",
-                        importance: "필수암기",
-                        category: "technique"
-                    },
-                    {
-                        term: "테스트 오라클 (Test Oracle)",
-                        definition: "테스트 실행 결과를 판단하기 위한 기준이나 소스",
-                        importance: "중요",
-                        category: "foundation"
-                    },
-                    {
-                        term: "시프트 레프트 (Shift Left)",
-                        definition: "소프트웨어 개발 생명주기의 초기 단계에서 테스팅을 수행하는 접근법",
-                        importance: "중요",
-                        category: "lifecycle"
-                    },
-                    {
-                        term: "테스트 피라미드 (Test Pyramid)",
-                        definition: "단위 테스트를 기반으로 하고 상위 레벨로 갈수록 테스트 수가 줄어드는 구조",
-                        importance: "중요",
-                        category: "management"
-                    }
-                ];
-
                 dataLoaded = true;
                 console.log('데이터 로드 완료:', quizQuestions.length, '문제');
             } catch (error) {
@@ -1043,12 +765,10 @@
         // LocalStorage에서 데이터 로드
         function loadFromStorage() {
             try {
-                const savedBookmarkedTerms = localStorage.getItem(STORAGE_KEYS.BOOKMARKED_TERMS);
                 const savedBookmarkedQuestions = localStorage.getItem(STORAGE_KEYS.BOOKMARKED_QUESTIONS);
                 const savedIncorrectQuestions = localStorage.getItem(STORAGE_KEYS.INCORRECT_QUESTIONS);
                 const savedAnsweredHistory = localStorage.getItem(STORAGE_KEYS.ANSWERED_HISTORY);
                 
-                if (savedBookmarkedTerms) bookmarkedTerms = new Set(JSON.parse(savedBookmarkedTerms));
                 if (savedBookmarkedQuestions) bookmarkedQuestions = new Set(JSON.parse(savedBookmarkedQuestions));
                 if (savedIncorrectQuestions) incorrectQuestions = new Set(JSON.parse(savedIncorrectQuestions));
                 if (savedAnsweredHistory) answeredQuestions = JSON.parse(savedAnsweredHistory);
@@ -1060,7 +780,6 @@
         // LocalStorage에 데이터 저장
         function saveToStorage() {
             try {
-                localStorage.setItem(STORAGE_KEYS.BOOKMARKED_TERMS, JSON.stringify(Array.from(bookmarkedTerms)));
                 localStorage.setItem(STORAGE_KEYS.BOOKMARKED_QUESTIONS, JSON.stringify(Array.from(bookmarkedQuestions)));
                 localStorage.setItem(STORAGE_KEYS.INCORRECT_QUESTIONS, JSON.stringify(Array.from(incorrectQuestions)));
                 localStorage.setItem(STORAGE_KEYS.ANSWERED_HISTORY, JSON.stringify(answeredQuestions));
@@ -1084,73 +803,11 @@
                 startQuiz();
             } else if (sectionName === 'review') {
                 displayReviewItems();
+            } else if (sectionName === 'key-review') {
+                displayKeyReview();
             } else if (sectionName === 'stats') {
                 displayStats();
-            } else if (sectionName === 'flashcard') {
-                loadFlashcard();
             }
-        }
-
-        // 용어 필터링
-        function filterTerms(category) {
-            currentFilter = category;
-            document.querySelectorAll('.filter-buttons .filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            displayTerms(category);
-        }
-
-        // 용어 표시
-        function displayTerms(category) {
-            const container = document.getElementById('terms-container');
-            container.innerHTML = '';
-            
-            if (terms.length === 0) {
-                container.innerHTML = '<div class="loading">데이터를 불러오는 중...</div>';
-                return;
-            }
-            
-            let filteredTerms = terms;
-            
-            if (category === 'bookmarked') {
-                filteredTerms = terms.filter((t, index) => bookmarkedTerms.has(index));
-            } else if (category !== 'all') {
-                filteredTerms = terms.filter(t => t.category === category);
-            }
-            
-            filteredTerms.forEach((term, originalIndex) => {
-                const actualIndex = terms.indexOf(term);
-                const termCard = document.createElement('div');
-                termCard.className = 'term-card';
-                if (bookmarkedTerms.has(actualIndex)) {
-                    termCard.classList.add('bookmarked');
-                }
-                
-                termCard.innerHTML = `
-                    <button class="bookmark-btn ${bookmarkedTerms.has(actualIndex) ? 'active' : ''}" 
-                            onclick="toggleTermBookmark(${actualIndex})">
-                        ${bookmarkedTerms.has(actualIndex) ? '⭐' : '☆'}
-                    </button>
-                    <div class="term-title">${term.term}</div>
-                    <div class="term-definition">${term.definition}</div>
-                    ${term.details ? `<div class="term-definition" style="font-size: 14px; color: #7f8c8d; margin-top: 10px;">💡 ${term.details}</div>` : ''}
-                    <div>
-                        <span class="term-importance">${term.importance}</span>
-                        <span class="term-category">${getCategoryName(term.category)}</span>
-                    </div>
-                `;
-                container.appendChild(termCard);
-            });
-        }
-
-        // 용어 북마크 토글
-        function toggleTermBookmark(index) {
-            if (bookmarkedTerms.has(index)) {
-                bookmarkedTerms.delete(index);
-            } else {
-                bookmarkedTerms.add(index);
-            }
-            saveToStorage();
-            displayTerms(currentFilter);
         }
 
         // 카테고리 이름 변환
@@ -1409,86 +1066,6 @@
             `;
         }
 
-        // 플래시카드 모드 설정
-        function setFlashcardMode(mode) {
-            flashcardMode = mode;
-            document.querySelectorAll('#flashcard .mode-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            currentCardIndex = 0;
-            loadFlashcard();
-        }
-
-        // 플래시카드 로드
-        function loadFlashcard() {
-            let filteredTerms = terms;
-            
-            if (flashcardMode === 'important') {
-                filteredTerms = terms.filter(t => t.importance === '필수암기');
-            } else if (flashcardMode === 'bookmarked') {
-                filteredTerms = terms.filter((t, index) => bookmarkedTerms.has(index));
-            }
-            
-            if (filteredTerms.length === 0) {
-                document.getElementById('flashcard-term').textContent = '표시할 카드가 없습니다';
-                document.getElementById('flashcard-definition').textContent = '다른 모드를 선택해주세요';
-                return;
-            }
-            
-            window.currentFlashcards = filteredTerms;
-            const term = filteredTerms[currentCardIndex];
-            
-            document.getElementById('flashcard-term').textContent = term.term;
-            document.getElementById('flashcard-definition').textContent = term.definition;
-            document.getElementById('card-importance').textContent = term.importance;
-            document.getElementById('card-counter').textContent = `${currentCardIndex + 1} / ${filteredTerms.length}`;
-            
-            // 카드 앞면 표시
-            document.getElementById('card-front').style.display = 'block';
-            document.getElementById('card-back').style.display = 'none';
-        }
-
-        function flipCard() {
-            const front = document.getElementById('card-front');
-            const back = document.getElementById('card-back');
-            
-            if (front.style.display !== 'none') {
-                front.style.display = 'none';
-                back.style.display = 'block';
-            } else {
-                front.style.display = 'block';
-                back.style.display = 'none';
-            }
-        }
-
-        function nextCard() {
-            const cards = window.currentFlashcards || terms;
-            currentCardIndex = (currentCardIndex + 1) % cards.length;
-            loadFlashcard();
-        }
-
-        function previousCard() {
-            const cards = window.currentFlashcards || terms;
-            currentCardIndex = currentCardIndex === 0 ? cards.length - 1 : currentCardIndex - 1;
-            loadFlashcard();
-        }
-
-        function bookmarkCard() {
-            const cards = window.currentFlashcards || terms;
-            const currentTerm = cards[currentCardIndex];
-            const originalIndex = terms.indexOf(currentTerm);
-            
-            if (bookmarkedTerms.has(originalIndex)) {
-                bookmarkedTerms.delete(originalIndex);
-            } else {
-                bookmarkedTerms.add(originalIndex);
-            }
-            
-            saveToStorage();
-            event.target.textContent = bookmarkedTerms.has(originalIndex) ? '⭐ 북마크 해제' : '☆ 북마크';
-        }
-
         // 오답노트 필터링
         function filterReview(filter) {
             currentReviewFilter = filter;
@@ -1521,7 +1098,7 @@
                 recentAnswers = recentAnswers.filter(a => bookmarkedQuestions.has(a.questionId));
             }
             
-            if (recentAnswers.length === 0 && reviewData["오답노트"].length === 0) {
+            if (recentAnswers.length === 0) {
                 container.innerHTML = `
                     <div style="text-align: center; padding: 50px;">
                         <h3>아직 학습 기록이 없습니다!</h3>
@@ -1532,81 +1109,86 @@
             }
             
             // 최근 학습 기록 표시
-            if (recentAnswers.length > 0) {
-                const recentSection = document.createElement('div');
-                recentSection.innerHTML = '<h3 style="margin-bottom: 20px;">📝 최근 학습 기록</h3>';
+            recentAnswers.forEach(answer => {
+                if (answer.skipped) return;
                 
-                recentAnswers.forEach(answer => {
-                    if (answer.skipped) return;
-                    
-                    const question = quizQuestions.find(q => q.id === answer.questionId);
-                    if (!question) return;
-                    
-                    const reviewItem = document.createElement('div');
-                    reviewItem.className = `review-item ${answer.correct ? 'correct' : 'incorrect'}`;
-                    
-                    reviewItem.innerHTML = `
-                        <div class="review-header">
-                            <div class="review-status">
-                                <span class="review-tag ${answer.correct ? 'tag-correct' : 'tag-incorrect'}">
-                                    ${answer.correct ? '정답' : '오답'}
-                                </span>
-                                <span class="review-tag tag-category">${getCategoryName(question.category)}</span>
+                const question = quizQuestions.find(q => q.id === answer.questionId);
+                if (!question) return;
+                
+                const reviewItem = document.createElement('div');
+                reviewItem.className = `review-item ${answer.correct ? 'correct' : 'incorrect'}`;
+                
+                reviewItem.innerHTML = `
+                    <div class="review-header">
+                        <div class="review-status">
+                            <span class="review-tag ${answer.correct ? 'tag-correct' : 'tag-incorrect'}">
+                                ${answer.correct ? '정답' : '오답'}
+                            </span>
+                            <span class="review-tag tag-category">${getCategoryName(question.category)}</span>
+                        </div>
+                        <button class="btn btn-warning" style="padding: 5px 15px; font-size: 12px;" 
+                                onclick="bookmarkQuestion('${question.id}')">
+                            ${bookmarkedQuestions.has(question.id) ? '⭐' : '☆'}
+                        </button>
+                    </div>
+                    <div class="review-question">${question.question}</div>
+                    <div class="review-options">
+                        ${question.options.map((option, index) => `
+                            <div class="review-option ${index === answer.userAnswer ? 'user-selected' : ''} 
+                                        ${index === question.correct ? 'correct-answer' : ''}">
+                                ${option}
                             </div>
-                            <button class="btn btn-warning" style="padding: 5px 15px; font-size: 12px;" 
-                                    onclick="bookmarkQuestion('${question.id}')">
-                                ${bookmarkedQuestions.has(question.id) ? '⭐' : '☆'}
-                            </button>
-                        </div>
-                        <div class="review-question">${question.question}</div>
-                        <div class="review-options">
-                            ${question.options.map((option, index) => `
-                                <div class="review-option ${index === answer.userAnswer ? 'user-selected' : ''} 
-                                            ${index === question.correct ? 'correct-answer' : ''}">
-                                    ${option}
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="review-explanation">
-                            <h4>💡 해설</h4>
-                            <p>${question.explanation}</p>
-                        </div>
-                    `;
-                    
-                    recentSection.appendChild(reviewItem);
-                });
+                        `).join('')}
+                    </div>
+                    <div class="review-explanation">
+                        <h4>💡 해설</h4>
+                        <p>${question.explanation}</p>
+                    </div>
+                `;
                 
-                container.appendChild(recentSection);
+                container.appendChild(reviewItem);
+            });
+        }
+
+        // 핵심 오답노트 표시
+        function displayKeyReview() {
+            const container = document.getElementById('key-review-container');
+            container.innerHTML = '';
+            
+            if (!dataLoaded) {
+                container.innerHTML = '<div class="loading">데이터를 불러오는 중...</div>';
+                return;
             }
             
-            // 오답노트 JSON 데이터 표시
-            if (reviewData["오답노트"].length > 0) {
-                const noteSection = document.createElement('div');
-                noteSection.innerHTML = '<h3 style="margin: 30px 0 20px;">📚 핵심 오답노트</h3>';
-                
-                reviewData["오답노트"].forEach(item => {
-                    const reviewItem = document.createElement('div');
-                    reviewItem.className = 'review-item';
-                    reviewItem.style.borderLeft = '5px solid #3498db';
-                    
-                    reviewItem.innerHTML = `
-                        <div class="review-header">
-                            <div class="review-status">
-                                <span class="review-tag tag-category">${item.카테고리}</span>
-                            </div>
-                        </div>
-                        <div class="review-question">${item.문제}</div>
-                        <div class="review-explanation">
-                            <h4>✅ 정답</h4>
-                            <p>${item.답변}</p>
-                        </div>
-                    `;
-                    
-                    noteSection.appendChild(reviewItem);
-                });
-                
-                container.appendChild(noteSection);
+            if (reviewData["오답노트"].length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 50px;">
+                        <h3>데이터를 불러오는 중입니다...</h3>
+                    </div>
+                `;
+                return;
             }
+            
+            reviewData["오답노트"].forEach(item => {
+                const reviewItem = document.createElement('div');
+                reviewItem.className = 'review-item';
+                reviewItem.style.borderLeft = '5px solid #3498db';
+                
+                reviewItem.innerHTML = `
+                    <div class="review-header">
+                        <div class="review-status">
+                            <span class="review-tag tag-category">${item.카테고리}</span>
+                        </div>
+                    </div>
+                    <div class="review-question">${item.문제}</div>
+                    <div class="review-explanation">
+                        <h4>✅ 정답</h4>
+                        <p>${item.답변}</p>
+                    </div>
+                `;
+                
+                container.appendChild(reviewItem);
+            });
         }
 
         // 통계 업데이트
